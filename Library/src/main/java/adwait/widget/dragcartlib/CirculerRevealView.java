@@ -27,6 +27,7 @@ public class CirculerRevealView extends View {
     protected final Interpolator INTERPOLATOR = new AccelerateDecelerateInterpolator();
     protected Paint paint = null;
     protected float expandFraction = 0;
+    protected float centerX,centerY;
 
     public CirculerRevealView(Context context) {
         super(context);
@@ -59,7 +60,7 @@ public class CirculerRevealView extends View {
         int cx = canvas.getWidth()/2;
         int cy = canvas.getHeight()/2;
         float radius = (float) Math.sqrt(cx*cx + cy*cy) * expandFraction;
-        canvas.drawCircle(cx, cy, radius, paint);
+        canvas.drawCircle(centerX, centerY, radius, paint);
     }
 
     public void setColor(int color){
@@ -106,6 +107,12 @@ public class CirculerRevealView extends View {
 
     public void setExpandFraction(float expandFraction) {
         this.expandFraction = expandFraction;
+        invalidate();
+    }
+
+    public void setCenter(float x,float y){
+        centerX = x;
+        centerY = y;
         invalidate();
     }
 
