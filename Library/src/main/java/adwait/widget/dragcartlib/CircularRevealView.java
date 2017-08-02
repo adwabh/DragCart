@@ -20,7 +20,7 @@ import android.view.animation.Interpolator;
  * Created by adwait on 27/07/17.
  */
 
-public class CirculerRevealView extends View {
+public class CircularRevealView extends View {
 
     protected static final int ANIMATION_DURATION = 300;
 
@@ -29,7 +29,7 @@ public class CirculerRevealView extends View {
     protected float expandFraction = 0;
     protected float centerX,centerY;
 
-    public CirculerRevealView(Context context) {
+    public CircularRevealView(Context context) {
         super(context);
         init(context, null, -1);
     }
@@ -39,18 +39,18 @@ public class CirculerRevealView extends View {
         paint.setColor(context.getResources().getColor(R.color.black));
     }
 
-    public CirculerRevealView(Context context, @Nullable AttributeSet attrs) {
+    public CircularRevealView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context,attrs,-1);
     }
 
-    public CirculerRevealView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CircularRevealView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context,attrs,defStyleAttr);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public CirculerRevealView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CircularRevealView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context,attrs,defStyleAttr);
     }

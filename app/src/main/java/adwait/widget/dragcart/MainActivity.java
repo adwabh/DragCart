@@ -1,24 +1,26 @@
 package adwait.widget.dragcart;
 
+import android.app.Activity;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 
-import adwait.widget.dragcartlib.CirculerRevealView;
+import adwait.widget.dragcartlib.CircularRevealView;
 
 import static adwait.widget.dragcart.R.color.colorAccent;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CirculerRevealView mCirculerRevealView;
+    private CircularRevealView mCircularRevealView;
     private FloatingActionButton fab;
     private boolean expanded;
     private AttachObserver listener;
@@ -31,28 +33,31 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        mCirculerRevealView = (CirculerRevealView) findViewById(R.id.revealView);
-        mCirculerRevealView.setColor(colorAccent);
-        int[] location = new int[2];
+        mCircularRevealView = (CircularRevealView) findViewById(R.id.revealView);
+        mCircularRevealView.setColor(getResources().getColor(colorAccent));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            listener = new AttachObserver(fab,location);
-            fab.getViewTreeObserver().addOnWindowAttachListener(listener);
+            fab.getViewTreeObserver().addOnGlobalLayoutListener(new AttachObserver(this, fab,mCircularRevealView));
         }
-        mCirculerRevealView.setCenter(location[0],location[1]);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if (!expanded) {
-                    mCirculerRevealView.expand().start();
+                    mCircularRevealView.expand().start();
                     expanded = true;
                 } else {
-                    mCirculerRevealView.contract().start();
+                    mCircularRevealView.contract().start();
                     expanded = false;
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -90,23 +95,70 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private static class AttachObserver implements ViewTreeObserver.OnWindowAttachListener {
-        private int[] mLocation;
+    private static class AttachObserver implements ViewTreeObserver.OnWindowAttachListener,ViewTreeObserver.OnGlobalLayoutListener {
+        private final CircularRevealView mCircularRevealView;
+        private final Activity mActivity;
         private View mView;
 
-        public AttachObserver(View fab, int[] location) {
-            mLocation = location;
+        public AttachObserver(Activity activity, View fab, CircularRevealView view) {
+            mCircularRevealView = view;
             mView = fab;
+            mActivity = activity;
         }
 
         @Override
         public void onWindowAttached() {
-            mView.getLocationInWindow(mLocation);
+
         }
 
         @Override
         public void onWindowDetached() {
 
         }
+
+        @Override
+        public void onGlobalLayout() {
+            int[] location = new int[2];
+            mView.getLocationOnScreen(location);
+            int centerX = getRelativeLeft(mView)+mView.getWidth()/2;//mView.getX()+mView.getWidth()/2;
+            int centerY = location[1] - 160;//getRelativeTop(mView)+mView.getHeight()/2 - mView.getRootView().getTop();//getTitleBarHeight(mActivity) - getStatusBarHeight(mActivity);//mView.getY()+mView.getHeight()/2;
+            mCircularRevealView.setCenter(centerX,centerY);
+
+        }
+        private int getRelativeLeft(View myView) {
+            if (myView.getParent() == myView.getRootView())
+                return myView.getLeft();
+            else
+                return myView.getLeft() + getRelativeLeft((View) myView.getParent());
+        }
+
+        private int getRelativeTop(View myView) {
+            if (myView.getParent() == myView.getRootView())
+                return myView.getTop();
+            else
+                return myView.getTop() + getRelativeTop((View) myView.getParent());
+        }
+
+        private int getStatusBarHeight(Activity activity){
+            Rect rectangle = new Rect();
+            Window window = activity.getWindow();
+            window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+            int statusBarHeight = rectangle.top;
+
+            return statusBarHeight;
+
+        }
+
+        private int getTitleBarHeight(Activity activity){
+            Window window = activity.getWindow();
+            int statusBarHeight = getStatusBarHeight(activity);
+
+            int contentViewTop =
+                    window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
+            int titleBarHeight= contentViewTop - statusBarHeight;
+            return titleBarHeight;
+        }
     }
+
+
 }

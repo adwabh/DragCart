@@ -8,7 +8,7 @@
     tools:context="adwait.widget.dragcart.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <adwait.widget.dragcartlib.CirculerRevealView
+    <adwait.widget.dragcartlib.CircularRevealView
         android:id="@+id/revealView"
         android:layout_width="0dp"
         android:layout_height="0dp"
