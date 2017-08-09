@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,15 +18,19 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 
 import adwait.widget.dragcartlib.CircularRevealView;
+import adwait.widget.dragcartlib.helper.OnStartDragListener;
+import adwait.widget.dragcartlib.helper.SimpleItemTouchHelperCallback;
 
 import static adwait.widget.dragcart.R.color.colorAccent;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnStartDragListener {
 
     private CircularRevealView mCircularRevealView;
     private FloatingActionButton fab;
     private boolean expanded;
     private AttachObserver listener;
+    private RecyclerView mRecyclerView;
+    private ItemTouchHelper mItemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         mCircularRevealView = (CircularRevealView) findViewById(R.id.revealView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mCircularRevealView.setColor(getResources().getColor(colorAccent));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -53,6 +61,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        init(mRecyclerView);
+    }
+
+    private void init(RecyclerView recyclerView) {
+        final RecyclerListAdapter adapter = new RecyclerListAdapter(this, this);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+
+        final int spanCount = getResources().getInteger(R.integer.grid_columns);
+        final GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
+        recyclerView.setLayoutManager(layoutManager);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override
@@ -92,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
