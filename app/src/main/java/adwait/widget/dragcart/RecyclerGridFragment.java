@@ -26,14 +26,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import adwait.widget.dragcartlib.helper.DragActionListener;
 import adwait.widget.dragcartlib.helper.OnStartDragListener;
 import adwait.widget.dragcartlib.helper.SimpleItemTouchHelperCallback;
 
 
-/**
- * @author Paul Burke (ipaulpro)
- */
-public class RecyclerGridFragment extends Fragment implements OnStartDragListener {
+
+public class RecyclerGridFragment extends Fragment implements DragActionListener {
 
     private ItemTouchHelper mItemTouchHelper;
 
@@ -68,5 +67,10 @@ public class RecyclerGridFragment extends Fragment implements OnStartDragListene
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
+    }
+
+    @Override
+    public void onStopDrag(RecyclerView.ViewHolder viewHolder) {
+
     }
 }

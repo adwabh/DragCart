@@ -32,9 +32,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import adwait.widget.dragcartlib.helper.DragActionListener;
 import adwait.widget.dragcartlib.helper.ItemTouchHelperAdapter;
 import adwait.widget.dragcartlib.helper.ItemTouchHelperViewHolder;
 import adwait.widget.dragcartlib.helper.OnStartDragListener;
+
+import static android.view.MotionEvent.ACTION_DOWN;
+import static android.view.MotionEvent.ACTION_UP;
 
 
 /**
@@ -48,9 +52,9 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     private final List<String> mItems = new ArrayList<>();
 
-    private final OnStartDragListener mDragStartListener;
+    private final DragActionListener mDragStartListener;
 
-    public RecyclerListAdapter(Context context, OnStartDragListener dragStartListener) {
+    public RecyclerListAdapter(Context context, DragActionListener dragStartListener) {
         mDragStartListener = dragStartListener;
         mItems.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
     }
@@ -58,7 +62,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, parent, false);
-        ItemViewHolder itemViewHolder = new ItemViewHolder(view);
+        ItemViewHolder itemViewHolder = new ItemViewHolder(view,mDragStartListener);
         return itemViewHolder;
     }
 
@@ -70,8 +74,13 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         holder.handleView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                    mDragStartListener.onStartDrag(holder);
+                switch(MotionEventCompat.getActionMasked(event)){
+                    case ACTION_DOWN:
+                        mDragStartListener.onStartDrag(holder);
+                        break;
+                    case ACTION_UP:
+                        mDragStartListener.onStopDrag(holder);
+                        break;
                 }
                 return false;
             }
@@ -105,11 +114,13 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
         public final TextView textView;
         public final ImageView handleView;
+        private final DragActionListener mListener;
 
-        public ItemViewHolder(View itemView) {
+        public ItemViewHolder(View itemView,DragActionListener listener) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.text);
             handleView = (ImageView) itemView.findViewById(R.id.handle);
+            mListener = listener;
         }
 
         @Override
@@ -120,6 +131,8 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         @Override
         public void onItemClear() {
             itemView.setBackgroundColor(0);
+            //TODO:dismiss cart here
+            mListener.onStopDrag(this);
         }
     }
 }

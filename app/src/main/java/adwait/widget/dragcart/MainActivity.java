@@ -18,12 +18,13 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 
 import adwait.widget.dragcartlib.CircularRevealView;
+import adwait.widget.dragcartlib.helper.DragActionListener;
 import adwait.widget.dragcartlib.helper.OnStartDragListener;
 import adwait.widget.dragcartlib.helper.SimpleItemTouchHelperCallback;
 
 import static adwait.widget.dragcart.R.color.colorAccent;
 
-public class MainActivity extends AppCompatActivity implements OnStartDragListener {
+public class MainActivity extends AppCompatActivity implements OnStartDragListener, DragActionListener {
 
     private CircularRevealView mCircularRevealView;
     private FloatingActionButton fab;
@@ -121,6 +122,13 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
+        mCircularRevealView.expand().start();
+
+    }
+
+    @Override
+    public void onStopDrag(RecyclerView.ViewHolder viewHolder) {
+        mCircularRevealView.contract().start();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
