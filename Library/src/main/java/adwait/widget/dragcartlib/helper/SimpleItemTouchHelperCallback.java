@@ -36,6 +36,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public static final float ALPHA_FULL = 1.0f;
 
     private final ItemTouchHelperAdapter mAdapter;
+    private float translationFactor;
 
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
@@ -65,8 +66,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         }
     }
 
-
-
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
         if (source.getItemViewType() != target.getItemViewType()) {
@@ -92,7 +91,18 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             viewHolder.itemView.setAlpha(alpha);
             viewHolder.itemView.setTranslationX(dX);
         } else {
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+//            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            //TODO: create draw here
+            float lastTranslationFactor = translationFactor;
+            translationFactor =  Math.abs(dX) / (float) viewHolder.itemView.getWidth() +  Math.abs(dY) / (float) viewHolder.itemView.getHeight();
+            final float alpha = ALPHA_FULL - translationFactor;
+            if (Math.abs(lastTranslationFactor-translationFactor)>0) {
+                viewHolder.itemView.setTranslationX(dX);
+                viewHolder.itemView.setTranslationY(dY);
+                viewHolder.itemView.setAlpha(alpha);
+            }
+
+//            viewHolder.itemView.animate().alpha(alpha).translationXBy(dX).translationYBy(dY).start();
         }
     }
 
