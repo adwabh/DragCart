@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import adwait.widget.dragcartlib.helper.DragActionListener;
-import adwait.widget.dragcartlib.helper.OnStartDragListener;
 import adwait.widget.dragcartlib.helper.SimpleItemTouchHelperCallback;
 
 
@@ -59,7 +58,7 @@ public class RecyclerGridFragment extends Fragment implements DragActionListener
         final GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), spanCount);
         recyclerView.setLayoutManager(layoutManager);
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter, getActivity());
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
     }

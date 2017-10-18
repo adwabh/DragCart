@@ -16,10 +16,14 @@
 
 package adwait.widget.dragcartlib.helper;
 
+import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+
+import adwait.widget.dragcartlib.R;
 
 /**
  * An implementation of {@link ItemTouchHelper.Callback} that enables basic drag & drop and
@@ -34,12 +38,16 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     public static final float ALPHA_FULL = 1.0f;
+    private static final float ALPHA_MIN = 0.5f;
 
     private final ItemTouchHelperAdapter mAdapter;
+    private final Paint paint;
     private float translationFactor;
 
-    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
+    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter, Context context) {
         mAdapter = adapter;
+        paint = new Paint();
+        paint.setColor(context.getResources().getColor(R.color.black));
     }
 
     @Override
@@ -84,25 +92,33 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            // Fade out the view as it is swiped out of the parent's bounds
-            final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
-            viewHolder.itemView.setAlpha(alpha);
-            viewHolder.itemView.setTranslationX(dX);
-        } else {
-//            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            //TODO: create draw here
-            float lastTranslationFactor = translationFactor;
-            translationFactor =  Math.abs(dX) / (float) viewHolder.itemView.getWidth() +  Math.abs(dY) / (float) viewHolder.itemView.getHeight();
-            final float alpha = ALPHA_FULL - translationFactor;
-            if (Math.abs(lastTranslationFactor-translationFactor)>0) {
-                viewHolder.itemView.setTranslationX(dX);
-                viewHolder.itemView.setTranslationY(dY);
+    public void onChildDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        if (isCurrentlyActive) {
+            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                // Fade out the view as it is swiped out of the parent's bounds
+                final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
                 viewHolder.itemView.setAlpha(alpha);
-            }
+                viewHolder.itemView.setTranslationX(dX);
+            } else {
+    //            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                //TODO: create draw here
+                int cx = viewHolder.itemView.getWidth()/2;
+                int cy = viewHolder.itemView.getHeight()/2;
+                final float alpha = ALPHA_FULL - translationFactor > ALPHA_MIN ? ALPHA_FULL - translationFactor: ALPHA_MIN;
+//                paint.setAlpha(Math.round(alpha));
+                canvas.drawCircle(cx + dX, cy + dY, 90, paint);
 
-//            viewHolder.itemView.animate().alpha(alpha).translationXBy(dX).translationYBy(dY).start();
+
+
+//                float lastTranslationFactor = translationFactor;
+//                translationFactor =  Math.abs(dX) / (float) viewHolder.itemView.getWidth() +  Math.abs(dY) / (float) viewHolder.itemView.getHeight();
+//                final float alpha = ALPHA_FULL - translationFactor > ALPHA_MIN ? ALPHA_FULL - translationFactor: ALPHA_MIN;
+//                if (Math.abs(lastTranslationFactor-translationFactor)>0) {
+//                    viewHolder.itemView.setTranslationX(dX);
+//                    viewHolder.itemView.setTranslationY(dY);
+//                    viewHolder.itemView.setAlpha(alpha);
+//                }
+            }
         }
     }
 

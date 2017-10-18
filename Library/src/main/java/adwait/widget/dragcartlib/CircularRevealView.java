@@ -28,6 +28,7 @@ public class CircularRevealView extends View {
     protected Paint paint = null;
     protected float expandFraction = 0;
     protected float centerX,centerY;
+    private View anchor;
 
     public CircularRevealView(Context context) {
         super(context);
@@ -115,5 +116,11 @@ public class CircularRevealView extends View {
         centerY = y;
         invalidate();
     }
+
+    public void setAnchor(View view){
+        this.anchor = view;
+    }
+
+
 
 }
