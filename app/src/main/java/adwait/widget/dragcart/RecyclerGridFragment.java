@@ -16,6 +16,7 @@
 
 package adwait.widget.dragcart;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -58,7 +59,18 @@ public class RecyclerGridFragment extends Fragment implements DragActionListener
         final GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), spanCount);
         recyclerView.setLayoutManager(layoutManager);
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter, getActivity());
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter, getActivity()){
+            @Override
+            public void onChildDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                if(actionState == ItemTouchHelper.DOWN){
+                    RecyclerListAdapter.ItemViewHolder holder = (RecyclerListAdapter.ItemViewHolder) viewHolder;
+//                    String text = holder.textView.getText().toString();
+//                    canvas.drawText(text,);
+                    holder.textView.animate().translationXBy(holder.textView.getWidth()/2).start();
+                }
+            }
+        };
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
     }

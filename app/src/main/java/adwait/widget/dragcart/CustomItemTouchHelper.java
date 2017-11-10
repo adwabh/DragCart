@@ -1,53 +1,39 @@
-/*
- * Copyright (C) 2015 Paul Burke
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package adwait.widget.dragcart;
 
-package adwait.widget.dragcartlib.helper;
-
+import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import adwait.widget.dragcartlib.R;
+import adwait.widget.dragcartlib.helper.ItemTouchHelperAdapter;
+import adwait.widget.dragcartlib.helper.ItemTouchHelperViewHolder;
+import adwait.widget.dragcartlib.helper.SimpleItemTouchHelperCallback;
+
+import static adwait.widget.dragcartlib.helper.SimpleItemTouchHelperCallback.ALPHA_FULL;
+import static adwait.widget.dragcartlib.helper.SimpleItemTouchHelperCallback.ALPHA_MIN;
+import static android.support.v7.widget.helper.ItemTouchHelper.Callback.makeMovementFlags;
 
 /**
- * An implementation of {@link ItemTouchHelper.Callback} that enables basic drag & drop and
- * swipe-to-dismiss. Drag events are automatically started by an item long-press.<br/>
- * </br/>
- * Expects the <code>RecyclerView.Adapter</code> to listen for {@link
- * ItemTouchHelperAdapter} callbacks and the <code>RecyclerView.ViewHolder</code> to implement
- * {@link ItemTouchHelperViewHolder}.
- *
- * @author Paul Burke (ipaulpro)
+ * Created by adwait on 09/11/17.
  */
-public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    public static final float ALPHA_FULL = 1.0f;
-    public static final float ALPHA_MIN = 0.5f;
+public class CustomItemTouchHelper extends ItemTouchHelper.Callback {
 
-    private final ItemTouchHelperAdapter mAdapter;
     private final Paint paint;
+    private ItemTouchHelperAdapter mAdapter;
+    private Context mContext;
     private float translationFactor;
 
-    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter, Context context) {
+    public CustomItemTouchHelper(ItemTouchHelperAdapter adapter, Context context) {
+        this.mAdapter = adapter;
+        this.mContext = context;
         mAdapter = adapter;
         paint = new Paint();
-        paint.setColor(context.getResources().getColor(R.color.black));
+        paint.setColor(context.getResources().getColor(adwait.widget.dragcartlib.R.color.black));
     }
 
     @Override
@@ -97,7 +83,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
             if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                 // Fade out the view as it is swiped out of the parent's bounds
-    //                final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
+                //                final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
                 final float alpha = ALPHA_FULL - translationFactor > ALPHA_MIN ? ALPHA_FULL - translationFactor: ALPHA_MIN;
                 viewHolder.itemView.setAlpha(alpha);
                 viewHolder.itemView.setTranslationX(dX);
@@ -109,15 +95,41 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public void onChildDrawOver(Canvas canvas, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (isCurrentlyActive) {
             if (actionState != ItemTouchHelper.ACTION_STATE_SWIPE) {
-                //            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                //TODO: create draw here
-                int cx = viewHolder.itemView.getLeft() + viewHolder.itemView.getWidth()/2;
-                int cy = viewHolder.itemView.getTop() + viewHolder.itemView.getHeight()/2;
-                final float alpha = ALPHA_FULL - translationFactor > ALPHA_MIN ? ALPHA_FULL - translationFactor: ALPHA_MIN;
-//                paint.setAlpha(Math.round(alpha));
+               if(viewHolder instanceof RecyclerListAdapter.ItemViewHolder){
+                   RecyclerListAdapter.ItemViewHolder holder = (RecyclerListAdapter.ItemViewHolder) viewHolder;
+                   Rect bounds = new Rect();
+                   viewHolder.itemView.getLocalVisibleRect(bounds);
+                   Animator anim = null;
+                   if (bounds.contains(Math.round(dX),Math.round(dY))) {
+                       anim = holder.imageView_clipping.contract();
+                       anim.addListener(new Animator.AnimatorListener() {
+                           @Override
+                           public void onAnimationStart(Animator animation) {
+                           }
 
+                           @Override
+                           public void onAnimationEnd(Animator animation) {
+                           }
 
-                canvas.drawCircle(cx + dX, cy + dY, 90, paint);
+                           @Override
+                           public void onAnimationCancel(Animator animation) {
+
+                           }
+
+                           @Override
+                           public void onAnimationRepeat(Animator animation) {
+
+                           }
+                       });
+                       anim.start();
+                   }else {
+                       int cx = viewHolder.itemView.getLeft() + viewHolder.itemView.getWidth() / 2;
+                       int cy = viewHolder.itemView.getTop() + viewHolder.itemView.getHeight() / 2;
+                       float alpha = ALPHA_FULL - translationFactor > ALPHA_MIN ? ALPHA_FULL - translationFactor : ALPHA_MIN;
+                       //                paint.setAlpha(Math.round(alpha));
+                       canvas.drawCircle(cx + dX, cy + dY, 90, paint);
+                   }
+               }
             }
         }
     }

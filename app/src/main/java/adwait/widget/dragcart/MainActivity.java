@@ -15,8 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.animation.DecelerateInterpolator;
 
 import adwait.widget.dragcartlib.CircularRevealView;
 import adwait.widget.dragcartlib.helper.DragActionListener;
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         final GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(layoutManager);
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter, this);
+        ItemTouchHelper.Callback callback = new CustomItemTouchHelper(adapter, this);//new SimpleItemTouchHelperCallback(adapter, this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
     }
@@ -144,6 +146,8 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         mItemTouchHelper.startDrag(viewHolder);
         mCircularRevealView.expand(((float)mFabRatio),1f).start();
     }
+
+
 
     @Override
     public void onStopDrag(RecyclerView.ViewHolder viewHolder) {
