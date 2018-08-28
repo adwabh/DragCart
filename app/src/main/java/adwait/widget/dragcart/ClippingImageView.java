@@ -113,7 +113,7 @@ public class ClippingImageView extends android.support.v7.widget.AppCompatImageV
     }
 
     public Animator contract(){
-        return animateExpandFraction(1, 0.1f);
+        return animateExpandFraction(1, 0.3f);
     }
 
     public Animator contract(float from, float to){

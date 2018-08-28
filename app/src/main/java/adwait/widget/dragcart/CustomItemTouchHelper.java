@@ -27,6 +27,7 @@ public class CustomItemTouchHelper extends ItemTouchHelper.Callback {
     private ItemTouchHelperAdapter mAdapter;
     private Context mContext;
     private float translationFactor;
+    private boolean highlighted;
 
     public CustomItemTouchHelper(ItemTouchHelperAdapter adapter, Context context) {
         this.mAdapter = adapter;
@@ -100,7 +101,7 @@ public class CustomItemTouchHelper extends ItemTouchHelper.Callback {
                    Rect bounds = new Rect();
                    viewHolder.itemView.getLocalVisibleRect(bounds);
                    Animator anim = null;
-                   if (bounds.contains(Math.round(dX),Math.round(dY))) {
+                   if (!highlighted) {
                        anim = holder.imageView_clipping.contract();
                        anim.addListener(new Animator.AnimatorListener() {
                            @Override
@@ -109,6 +110,7 @@ public class CustomItemTouchHelper extends ItemTouchHelper.Callback {
 
                            @Override
                            public void onAnimationEnd(Animator animation) {
+                               highlighted = true;
                            }
 
                            @Override
@@ -122,6 +124,7 @@ public class CustomItemTouchHelper extends ItemTouchHelper.Callback {
                            }
                        });
                        anim.start();
+
                    }else {
                        int cx = viewHolder.itemView.getLeft() + viewHolder.itemView.getWidth() / 2;
                        int cy = viewHolder.itemView.getTop() + viewHolder.itemView.getHeight() / 2;
@@ -131,6 +134,8 @@ public class CustomItemTouchHelper extends ItemTouchHelper.Callback {
                    }
                }
             }
+        }else {
+            highlighted = false;
         }
     }
 
