@@ -11,16 +11,20 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.animation.DecelerateInterpolator;
 
 import adwait.widget.dragcartlib.CircularRevealView;
 import adwait.widget.dragcartlib.helper.DragActionListener;
 import adwait.widget.dragcartlib.helper.OnStartDragListener;
 import adwait.widget.dragcartlib.helper.SimpleItemTouchHelperCallback;
+import adwait.widget.dragcartlib.utils.DimenUtils;
 
 import static adwait.widget.dragcart.R.color.colorAccent;
 
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
     private AttachObserver listener;
     private RecyclerView mRecyclerView;
     private ItemTouchHelper mItemTouchHelper;
+    private double mFabRatio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         mCircularRevealView = (CircularRevealView) findViewById(R.id.revealView);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mCircularRevealView.setColor(getResources().getColor(colorAccent));
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             fab.getViewTreeObserver().addOnGlobalLayoutListener(new AttachObserver(this, fab,mCircularRevealView));
@@ -75,9 +81,25 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         final GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(layoutManager);
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper.Callback callback = new CustomItemTouchHelper(adapter, this);//new SimpleItemTouchHelperCallback(adapter, this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        int[] screenLoc = new int[2];
+        fab.getLocationOnScreen(screenLoc);
+        Log.e("location","top = "+screenLoc[0]+", left = "+screenLoc[1]);
+        int[] location = new int[2];
+        int centerX = fab.getWidth()/2;//getRelativeLeft(mView)+mView.getWidth()/2;//mView.getX()+mView.getWidth()/2;
+        int centerY = fab.getHeight()/2;//getRelativeTop(mView)+mView.getHeight()/2 - mView.getRootView().getTop();//getTitleBarHeight(mActivity) - getStatusBarHeight(mActivity);//mView.getY()+mView.getHeight()/2;
+        mCircularRevealView.setCenter(centerX,centerY);
+        int cx = mCircularRevealView.getWidth()/2;
+        int cy = mCircularRevealView.getHeight()/2;
+        float radius = (float) Math.sqrt(cx * cx + cy * cy);
+        mFabRatio = DimenUtils.getRatio(radius,DimenUtils.dpTopx(this,fab.getHeight()));
     }
 
     @Override
@@ -122,13 +144,14 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
-        mCircularRevealView.expand().start();
-
+        mCircularRevealView.expand(((float)mFabRatio),1f).start();
     }
+
+
 
     @Override
     public void onStopDrag(RecyclerView.ViewHolder viewHolder) {
-        mCircularRevealView.contract().start();
+        mCircularRevealView.contract(1f,((float)mFabRatio)).start();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)

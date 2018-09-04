@@ -14,6 +14,7 @@
   ~ limitations under the License.
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="?listPreferredItemHeight"
@@ -36,4 +37,19 @@
         android:layout_gravity="center_vertical|right"
         android:scaleType="center"
         android:src="@drawable/ic_reorder_grey_500_24dp" />
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/linear_layout_reveal"
+        android:background="@color/colorPrimary"
+        android:visibility="invisible"
+        android:orientation="vertical"
+        android:layout_height="match_parent"/>-->
+
+    <adwait.widget.dragcart.ClippingImageView
+        android:id="@+id/imageView_clipping"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        app:backgroundColor="@android:color/darker_gray"
+        android:visibility="gone"/>
 </FrameLayout>

@@ -13,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
@@ -27,7 +28,8 @@ public class CircularRevealView extends View {
     protected final Interpolator INTERPOLATOR = new AccelerateDecelerateInterpolator();
     protected Paint paint = null;
     protected float expandFraction = 0;
-    protected float centerX,centerY;
+    protected float centerX, centerY;
+    private View anchor;
 
     public CircularRevealView(Context context) {
         super(context);
@@ -41,49 +43,49 @@ public class CircularRevealView extends View {
 
     public CircularRevealView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context,attrs,-1);
+        init(context, attrs, -1);
     }
 
     public CircularRevealView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context,attrs,defStyleAttr);
+        init(context, attrs, defStyleAttr);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public CircularRevealView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context,attrs,defStyleAttr);
+        init(context, attrs, defStyleAttr);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int cx = canvas.getWidth()/2;
-        int cy = canvas.getHeight()/2;
-        float radius = (float) Math.sqrt(cx*cx + cy*cy) * expandFraction;
+        int cx = canvas.getWidth() / 2;
+        int cy = canvas.getHeight() / 2;
+        float radius = (float) Math.sqrt(cx * cx + cy * cy) * expandFraction;
         canvas.drawCircle(centerX, centerY, radius, paint);
     }
 
-    public void setColor(int color){
+    public void setColor(int color) {
         paint.setColor(color);
     }
 
-    public Animator expand(){
+    public Animator expand() {
         return animateExpandFraction(0.1f, 1);
     }
 
-    public Animator expand(float from, float to){
-        if (from<to) {
+    public Animator expand(float from, float to) {
+        if (from < to) {
             return animateExpandFraction(from, to);
         }
         return expand();
     }
 
-    public Animator contract(){
+    public Animator contract() {
         return animateExpandFraction(1, 0.1f);
     }
 
-    public Animator contract(float from, float to){
-        if (from>to) {
+    public Animator contract(float from, float to) {
+        if (from > to) {
             return animateExpandFraction(from, to);
         }
         return contract();
@@ -110,10 +112,22 @@ public class CircularRevealView extends View {
         invalidate();
     }
 
-    public void setCenter(float x,float y){
+    public void setCenter(float x, float y) {
         centerX = x;
         centerY = y;
         invalidate();
+    }
+
+    public void setAnchor(View view) {
+        this.anchor = view;
+    }
+
+    private static class ViewObserver implements ViewTreeObserver.OnGlobalLayoutListener {
+
+        @Override
+        public void onGlobalLayout() {
+
+        }
     }
 
 }
