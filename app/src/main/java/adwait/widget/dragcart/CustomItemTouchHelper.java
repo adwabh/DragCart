@@ -136,6 +136,11 @@ public class CustomItemTouchHelper extends ItemTouchHelper.Callback {
             }
         }else {
             highlighted = false;
+            int cx = viewHolder.itemView.getLeft() + viewHolder.itemView.getWidth() / 2;
+            int cy = viewHolder.itemView.getTop() + viewHolder.itemView.getHeight() / 2;
+            float alpha = ALPHA_FULL - translationFactor > ALPHA_MIN ? ALPHA_FULL - translationFactor : ALPHA_MIN;
+            //                paint.setAlpha(Math.round(alpha));
+            canvas.drawCircle(cx + dX, cy + dY, 90, paint);
         }
     }
 
