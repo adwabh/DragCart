@@ -122,6 +122,14 @@ public class CircularRevealView extends View {
         this.anchor = view;
     }
 
+    public float getAnchorX() {
+        return centerX;
+    }
+
+    public float getAnchorY() {
+        return centerY;
+    }
+
     private static class ViewObserver implements ViewTreeObserver.OnGlobalLayoutListener {
 
         @Override

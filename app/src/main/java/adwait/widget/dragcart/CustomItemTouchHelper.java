@@ -9,13 +9,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import adwait.widget.dragcartlib.CircularRevealView;
 import adwait.widget.dragcartlib.helper.ItemTouchHelperAdapter;
 import adwait.widget.dragcartlib.helper.ItemTouchHelperViewHolder;
-import adwait.widget.dragcartlib.helper.SimpleItemTouchHelperCallback;
 
 import static adwait.widget.dragcartlib.helper.SimpleItemTouchHelperCallback.ALPHA_FULL;
 import static adwait.widget.dragcartlib.helper.SimpleItemTouchHelperCallback.ALPHA_MIN;
-import static android.support.v7.widget.helper.ItemTouchHelper.Callback.makeMovementFlags;
 
 /**
  * Created by adwait on 09/11/17.
@@ -24,14 +23,16 @@ import static android.support.v7.widget.helper.ItemTouchHelper.Callback.makeMove
 public class CustomItemTouchHelper extends ItemTouchHelper.Callback {
 
     private final Paint paint;
+    private final CircularRevealView circularRevealView;
     private ItemTouchHelperAdapter mAdapter;
     private Context mContext;
     private float translationFactor;
     private boolean highlighted;
 
-    public CustomItemTouchHelper(ItemTouchHelperAdapter adapter, Context context) {
+    public CustomItemTouchHelper(ItemTouchHelperAdapter adapter, Context context, CircularRevealView circularRevealView) {
         this.mAdapter = adapter;
         this.mContext = context;
+        this.circularRevealView = circularRevealView;
         mAdapter = adapter;
         paint = new Paint();
         paint.setColor(context.getResources().getColor(adwait.widget.dragcartlib.R.color.black));
@@ -135,12 +136,15 @@ public class CustomItemTouchHelper extends ItemTouchHelper.Callback {
                }
             }
         }else {
+            //move this towards the anchored view
             highlighted = false;
-            int cx = viewHolder.itemView.getLeft() + viewHolder.itemView.getWidth() / 2;
-            int cy = viewHolder.itemView.getTop() + viewHolder.itemView.getHeight() / 2;
-            float alpha = ALPHA_FULL - translationFactor > ALPHA_MIN ? ALPHA_FULL - translationFactor : ALPHA_MIN;
-            //                paint.setAlpha(Math.round(alpha));
-            canvas.drawCircle(cx + dX, cy + dY, 90, paint);
+//            int cx = viewHolder.itemView.getLeft() + viewHolder.itemView.getWidth() / 2;
+//            int cy = viewHolder.itemView.getTop() + viewHolder.itemView.getHeight() / 2;
+//            float alpha = ALPHA_FULL - translationFactor > ALPHA_MIN ? ALPHA_FULL - translationFactor : ALPHA_MIN;
+//            //                paint.setAlpha(Math.round(alpha));
+            canvas.drawCircle(circularRevealView.getAnchorX(), circularRevealView.getAnchorY(), 90, paint);
+
+
         }
     }
 
