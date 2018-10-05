@@ -19,32 +19,24 @@ package adwait.widget.dragcart;
 import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import adwait.widget.dragcartlib.helper.DragActionListener;
 import adwait.widget.dragcartlib.helper.ItemTouchHelperAdapter;
 import adwait.widget.dragcartlib.helper.ItemTouchHelperViewHolder;
-import adwait.widget.dragcartlib.helper.OnStartDragListener;
+import adwait.widget.dragcartlib.utils.ContractHolder;
 
-import static android.R.attr.x;
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_UP;
 
@@ -179,8 +171,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
      * Simple example of a view holder that implements {@link ItemTouchHelperViewHolder} and has a
      * "handle" view that initiates a drag event when touched.
      */
-    public static class ItemViewHolder extends RecyclerView.ViewHolder implements
-            ItemTouchHelperViewHolder {
+    public static class ItemViewHolder extends ContractHolder {
 
         public final TextView textView;
         public final ImageView handleView;
@@ -207,6 +198,16 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
             itemView.setBackgroundColor(0);
             //TODO:dismiss cart here
             mListener.onStopDrag(this);
+        }
+
+        @Override
+        public Animator contract() {
+            return imageView_clipping.contract();
+        }
+
+        @Override
+        public Animator expand() {
+            return imageView_clipping.expand();
         }
     }
 

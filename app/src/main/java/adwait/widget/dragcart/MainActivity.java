@@ -48,9 +48,10 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         mCircularRevealView.setColor(getResources().getColor(colorAccent));
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            fab.getViewTreeObserver().addOnGlobalLayoutListener(new AttachObserver(this, fab,mCircularRevealView));
-        }
+        mCircularRevealView.setAnchor(fab);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+//            fab.getViewTreeObserver().addOnGlobalLayoutListener(new AttachObserver(this, fab,mCircularRevealView));
+//        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         final GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(layoutManager);
 
-        ItemTouchHelper.Callback callback = new CustomItemTouchHelper(adapter, this, mCircularRevealView);//new SimpleItemTouchHelperCallback(adapter, this);
+        ItemTouchHelper.Callback callback = new CircularRevealView.CustomItemTouchHelper(adapter, this, mCircularRevealView);//new SimpleItemTouchHelperCallback(adapter, this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
     }
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 fab.getViewTreeObserver().removeOnWindowAttachListener(listener);
+                mCircularRevealView.removeAnchor();
             }
         } catch (Exception e) {
             e.printStackTrace();
