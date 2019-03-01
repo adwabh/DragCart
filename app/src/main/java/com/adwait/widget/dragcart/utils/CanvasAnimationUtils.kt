@@ -1,9 +1,10 @@
-package com.pb.learning.interaction.utils
+package com.adwait.widget.dragcart.utils
 
 import android.view.animation.Interpolator
 
 
 /**
+ *
  * Created by Adwait Abhyankar on 2/8/2019.
  */
 class CanvasAnimationUtils() {

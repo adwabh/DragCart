@@ -1,4 +1,4 @@
-package com.pb.learning.interaction
+package com.adwait.widget.dragcart
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.pb.learning.interaction
+package com.adwait.widget.dragcart
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

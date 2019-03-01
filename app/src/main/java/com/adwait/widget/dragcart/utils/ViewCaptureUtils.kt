@@ -1,4 +1,4 @@
-package com.pb.learning.interaction.utils
+package com.adwait.widget.dragcart.utils
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -7,7 +7,7 @@ import android.support.v7.widget.CardView
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.ImageView
-import com.pb.learning.interaction.R
+import com.adwait.widget.dragcart.R
 
 
 /**

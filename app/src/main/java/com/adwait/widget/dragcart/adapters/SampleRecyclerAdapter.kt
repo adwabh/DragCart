@@ -1,4 +1,4 @@
-package com.pb.learning.interaction.adapters
+package com.adwait.widget.dragcart.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.pb.learning.interaction.R
+import com.adwait.widget.dragcart.R
 import java.util.concurrent.ThreadLocalRandom
 
 

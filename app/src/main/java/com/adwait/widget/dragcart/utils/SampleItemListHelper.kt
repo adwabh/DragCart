@@ -1,4 +1,4 @@
-package com.pb.learning.interaction.utils
+package com.adwait.widget.dragcart.utils
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
@@ -12,7 +12,6 @@ import android.view.View.*
 import android.view.ViewGroup
 import android.view.animation.*
 import android.widget.ImageView
-import kotlinx.android.synthetic.main.fragment_detail.view.*
 
 
 /**

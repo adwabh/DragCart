@@ -1,4 +1,4 @@
-package com.pb.learning.interaction.utils
+package com.adwait.widget.dragcart.utils
 
 import android.graphics.Bitmap
 import java.io.ByteArrayInputStream

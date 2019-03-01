@@ -1,13 +1,10 @@
-package com.pb.learning.interaction.activities
+package com.adwait.widget.dragcart.activities
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import com.pb.learning.interaction.R
-import com.pb.learning.interaction.adapters.SampleRecyclerAdapter
-import com.pb.learning.interaction.fragments.SampleListFragment
+import com.adwait.widget.dragcart.R
+import com.adwait.widget.dragcart.fragments.SampleListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
