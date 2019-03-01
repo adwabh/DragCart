@@ -11,8 +11,8 @@ import android.view.animation.AccelerateDecelerateInterpolator
 
 /**
  * Created by Adwait Abhyankar on 2/20/2019.
- * Pitney-Bowes
- * adwait.abhyankar@pb.com
+ * http://blog.trsquarelab.com/2015/12/creating-custom-animation-in.html
+ *  https://android.googlesource.com/platform/frameworks/support/+/c110be5/v7/recyclerview/src/android/support/v7/widget/DefaultItemAnimator.java
  */
 class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): SimpleItemAnimator() {
     interface UpdateListener {
@@ -90,4 +90,6 @@ class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): SimpleIte
     override fun endAnimations() {
 
     }
+
+
 }

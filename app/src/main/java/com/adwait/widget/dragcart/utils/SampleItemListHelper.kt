@@ -80,16 +80,10 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
         }
     }
 
-    private var animUtil: CanvasAnimationUtils? = null
 
     override fun onChildDrawOver(canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder?, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         var copy = ViewCaptureUtils.copyViewImageAsBitmap(viewHolder?.itemView!!)
         if(isCurrentlyActive){
-            val top = viewHolder?.itemView?.top?:0
-            val bottom = viewHolder?.itemView?.bottom?:0
-            val left = viewHolder?.itemView?.left?:0
-            val right = viewHolder?.itemView?.right?:0
-            val rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
                 drawEnclosed(canvas, viewHolder, copy, dX, dY)
                 lastX = dX
                 lastY = dY
