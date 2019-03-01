@@ -8,6 +8,7 @@ import android.graphics.*
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.View.*
 import android.view.ViewGroup
 import android.view.animation.*
@@ -17,7 +18,14 @@ import android.widget.ImageView
 /**
  * Created by Adwait Abhyankar on 1/21/2019.
  */
-class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callback() {
+class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callback(), SampleItemAnimator.UpdateListener {
+    var drawX: Int = 0
+    var drawY: Int = 0
+
+    override fun onAnimateUpdate(animator: ValueAnimator) {
+        drawX = animator.getAnimatedValue("x") as Int
+        drawY = animator.getAnimatedValue("y") as Int
+    }
 
     var lastX:Float = 0f
     var lastY:Float = 0f
@@ -75,49 +83,19 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
     private var animUtil: CanvasAnimationUtils? = null
 
     override fun onChildDrawOver(canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder?, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
-        val top = viewHolder?.itemView?.top?:0
-        val bottom = viewHolder?.itemView?.bottom?:0
-        val left = viewHolder?.itemView?.left?:0
-        val right = viewHolder?.itemView?.right?:0
-        val rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
         var copy = ViewCaptureUtils.copyViewImageAsBitmap(viewHolder?.itemView!!)
-
         if(isCurrentlyActive){
-//                viewHolder.itemView.visibility = INVISIBLE
+            val top = viewHolder?.itemView?.top?:0
+            val bottom = viewHolder?.itemView?.bottom?:0
+            val left = viewHolder?.itemView?.left?:0
+            val right = viewHolder?.itemView?.right?:0
+            val rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
                 drawEnclosed(canvas, viewHolder, copy, dX, dY)
                 lastX = dX
                 lastY = dY
         }else{
-//            var radius = Math.hypot((left - dX).toDouble(), (top - dY).toDouble())
-//            canvas.drawCircle(fabX,fabY, radius.toFloat(), Paint(Color.RED))
-
-            if(animUtil==null) {
-                animUtil = CanvasAnimationUtils.Builder()
-                        .withProperty("x", CanvasAnimationUtils.CanvasAnimationHolder(fabX, viewParams.xPos, AccelerateDecelerateInterpolator(), 300))
-                        .withProperty("y", CanvasAnimationUtils.CanvasAnimationHolder(fabX, viewParams.xPos, AccelerateDecelerateInterpolator(), 300))
-                        .build()
-
-            }
-
-
-/*            if (!isAnimating) {
-                var xholder = PropertyValuesHolder.ofFloat("x",viewParams.xPos,fabX)
-                var yholder = PropertyValuesHolder.ofFloat("y",viewParams.yPos,fabY)
-                currentAnimator = ValueAnimator.ofPropertyValuesHolder(xholder,yholder).apply {
-                    duration = 300
-                    addListener(animationListener)
-                    start()
-                    addUpdateListener {
-                        drawEnclosed(canvas, viewHolder, copy, currentAnimator.getAnimatedValue("x") as Float, currentAnimator.getAnimatedValue("y") as Float)
-                    }
-
-                }
-*/
-//            }
-            val (fractionX,valueX) = this.animUtil!!.getAnimated("x")
-            val (fractionY,valueY) = this.animUtil!!.getAnimated("y")
-            drawEnclosed(canvas,viewHolder,copy,valueX,valueY)
-
+            Log.e("Animated", "x=$drawX, y=$drawY")
+            drawEnclosed(canvas,viewHolder,copy,drawX.toFloat(),drawY.toFloat())
         }
     }
 
@@ -138,8 +116,9 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        currentAnimator.cancel()
         super.clearView(recyclerView, viewHolder)
+        viewHolder.itemView.tag = viewParams
+        recyclerView.adapter?.notifyItemChanged(viewHolder.adapterPosition)
     }
 
     /*override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {

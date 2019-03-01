@@ -4,7 +4,6 @@ import android.view.animation.Interpolator
 
 
 /**
- *
  * Created by Adwait Abhyankar on 2/8/2019.
  */
 class CanvasAnimationUtils() {
@@ -23,7 +22,6 @@ class CanvasAnimationUtils() {
         this.duration = duration
         this.start = start
         this.end = end
-
     }
 
 
@@ -109,10 +107,10 @@ class CanvasAnimationUtils() {
         private var fraction: Float = 0.0f
 
         fun animate(){
-            if(value<end){
-                fraction = interpolator.getInterpolation(value/end)
+//            if(value<end){
+                fraction = Math.abs(end-value)/duration
                 value += value * fraction
-            }
+//            }
         }
 
         fun getAnimated(): Pair<Float, Float> {
