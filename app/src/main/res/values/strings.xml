@@ -8,4 +8,5 @@
     <string name="date_text">Date</string>
     <string name="status_text">Status</string>
     <string name="action_back">Back</string>
+    <string name="view_params">view_params</string>
 </resources>

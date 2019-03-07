@@ -13,6 +13,7 @@ import android.view.View.*
 import android.view.ViewGroup
 import android.view.animation.*
 import android.widget.ImageView
+import com.adwait.widget.dragcart.R
 
 
 /**
@@ -111,7 +112,7 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
-        viewHolder.itemView.tag = viewParams
+        viewHolder.itemView.setTag(R.string.view_params,viewParams)
         recyclerView.adapter?.notifyItemChanged(viewHolder.adapterPosition)
     }
 

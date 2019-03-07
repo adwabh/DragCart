@@ -498,8 +498,8 @@ class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): SimpleIte
             mChangeAnimations.add(changeInfo.oldHolder!!)
             val oldViewAnim = ViewCompat.animate(view).setDuration(
                     changeDuration)
-            oldViewAnim.translationX((changeInfo.toX - changeInfo.fromX).toFloat())
-            oldViewAnim.translationY((changeInfo.toY - changeInfo.fromY).toFloat())
+            oldViewAnim.translationX((300 - changeInfo.fromX).toFloat())
+            oldViewAnim.translationY((500 - changeInfo.fromY).toFloat())
             oldViewAnim.alpha(0f).setListener(object : VpaListenerAdapter() {
                 override fun onAnimationStart(view: View) {
                     dispatchChangeStarting(changeInfo.oldHolder, true)
