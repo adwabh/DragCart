@@ -20,12 +20,17 @@ import com.adwait.widget.dragcart.R
  * Created by Adwait Abhyankar on 1/21/2019.
  */
 class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callback(), SampleItemAnimator.UpdateListener {
-    var drawX: Int = 0
-    var drawY: Int = 0
+    var drawX: Float = 0f
+    var drawY: Float = 0f
+    private lateinit var image: ImageView
+
 
     override fun onAnimateUpdate(animator: ValueAnimator) {
-        drawX = animator.getAnimatedValue("x") as Int
-        drawY = animator.getAnimatedValue("y") as Int
+        drawX = (animator.getAnimatedValue("x") as Float)
+        drawY = (animator.getAnimatedValue("y") as Float)
+        Log.d("Animated", "updated x=$drawX, y=$drawY")
+        image.x = drawX
+        image.y = drawY
     }
 
     var lastX:Float = 0f
@@ -90,7 +95,7 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
                 lastY = dY
         }else{
             Log.e("Animated", "x=$drawX, y=$drawY")
-            drawEnclosed(canvas,viewHolder,copy,drawX.toFloat(),drawY.toFloat())
+            drawEnclosed(canvas,viewHolder,copy,drawX,drawY)
         }
     }
 
@@ -110,14 +115,9 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
         canvas.drawBitmap(clipped,xPos,yPos, paint)
     }
 
-    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        super.clearView(recyclerView, viewHolder)
-        viewHolder.itemView.setTag(R.string.view_params,viewParams)
-        recyclerView.adapter?.notifyItemChanged(viewHolder.adapterPosition)
-    }
 
-    /*override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        val image = ImageView(recyclerView.context)
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        image = ImageView(recyclerView.context)
         image.setImageBitmap(viewParams.bitmap)
         image.apply {
             layoutParams = ViewGroup.LayoutParams(viewHolder.itemView.height,viewHolder.itemView.width)
@@ -130,8 +130,10 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
 
 //            setImageBitmap(Bitmap.createScaledBitmap(viewParams.bitmap,viewParams.width.toInt(),viewParams.height.toInt(),false))
         }
-        root?.addView(image).run {animateToDestinationIfNecessary(image,viewHolder)}
-    }*/
+        root?.addView(image)
+        viewHolder.itemView.setTag(R.string.view_params,viewParams)
+        recyclerView.adapter?.notifyItemChanged(viewHolder.adapterPosition)
+    }
 
     private fun animateToDestinationIfNecessary(image: ImageView,viewHolder: RecyclerView.ViewHolder) {
         var xholder:PropertyValuesHolder = PropertyValuesHolder.ofFloat("x",image.x,fabX)

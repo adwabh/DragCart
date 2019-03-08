@@ -1,5 +1,7 @@
 package com.adwait.widget.dragcart.utils
 
+import android.animation.Animator
+import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SimpleItemAnimator
@@ -8,6 +10,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder
 import android.support.v4.view.ViewCompat
 import android.view.View
 import android.support.v4.view.ViewPropertyAnimatorListener
+import com.adwait.widget.dragcart.R
 
 /**
  * Created by Adwait Abhyankar on 2/20/2019.
@@ -488,18 +491,18 @@ class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): SimpleIte
         }).start()
     }
 
-
     private fun animateChangeImpl(changeInfo: ChangeInfo) {
         val holder = changeInfo.oldHolder
         val view = holder?.itemView
         val newHolder = changeInfo.newHolder
         val newView = newHolder?.itemView
         if (view != null) {
+
             mChangeAnimations.add(changeInfo.oldHolder!!)
             val oldViewAnim = ViewCompat.animate(view).setDuration(
                     changeDuration)
-            oldViewAnim.translationX((300 - changeInfo.fromX).toFloat())
-            oldViewAnim.translationY((500 - changeInfo.fromY).toFloat())
+            oldViewAnim.translationX((changeInfo.toX - changeInfo.fromX).toFloat())
+            oldViewAnim.translationY((changeInfo.toY - changeInfo.fromY).toFloat())
             oldViewAnim.alpha(0f).setListener(object : VpaListenerAdapter() {
                 override fun onAnimationStart(view: View) {
                     dispatchChangeStarting(changeInfo.oldHolder, true)
@@ -535,7 +538,41 @@ class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): SimpleIte
                 }
             }).start()
         }
+        animateToCart(changeInfo)
     }
+
+    private fun animateToCart(changeInfo: ChangeInfo) {
+        var viewParams = changeInfo.oldHolder?.itemView?.getTag(R.string.view_params) as SampleItemListHelper.ViewParams
+        if (viewParams!=null) {
+            val xHolder = PropertyValuesHolder.ofFloat("x",viewParams.xPos,300f)
+            val yHolder = PropertyValuesHolder.ofFloat("y",viewParams.yPos,500f)
+            var valueAnimator = ValueAnimator.ofPropertyValuesHolder(xHolder,yHolder)
+            valueAnimator.apply {
+                duration = changeDuration
+                addUpdateListener {
+                    updateTarget.onAnimateUpdate(this)
+                }
+                addListener(object: Animator.AnimatorListener{
+                    override fun onAnimationRepeat(p0: Animator?) {
+                    }
+
+                    override fun onAnimationEnd(p0: Animator?) {
+                        dispatchFinishedWhenDone()
+                    }
+
+                    override fun onAnimationCancel(p0: Animator?) {
+                        dispatchFinishedWhenDone()
+                    }
+
+                    override fun onAnimationStart(p0: Animator?) {
+                        dispatchChangeStarting(changeInfo.newHolder, true)
+                    }
+                })
+                start()
+            }
+        }
+    }
+
     /**
      * Check the state of currently pending and running animations. If there are none
      * pending/running, call [.dispatchAnimationsFinished] to notify any
