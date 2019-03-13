@@ -35,12 +35,11 @@ class SampleListFragment : Fragment() {
 
     }
 
-
     private lateinit var itemAnimator: SampleItemAnimator
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        recyclerView_content.layoutManager = GridLayoutManager(activity,2,GridLayoutManager.VERTICAL,false)//LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false)
+        recyclerView_content.layoutManager = GridLayoutManager(activity,3,GridLayoutManager.VERTICAL,false)//LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false)
         recyclerView_content.adapter = SampleRecyclerAdapter()
         touchHelper = SampleItemListHelper(recyclerView_content.parent as ViewGroup?)
         ItemTouchHelper(touchHelper).attachToRecyclerView(recyclerView_content)

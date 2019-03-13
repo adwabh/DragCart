@@ -1,6 +1,7 @@
 package com.adwait.widget.dragcart.utils
 
 import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.support.v7.widget.RecyclerView
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder
 import android.support.v4.view.ViewCompat
 import android.view.View
 import android.support.v4.view.ViewPropertyAnimatorListener
+import android.util.Log
 import com.adwait.widget.dragcart.R
 
 /**
@@ -496,6 +498,7 @@ class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): SimpleIte
         val view = holder?.itemView
         val newHolder = changeInfo.newHolder
         val newView = newHolder?.itemView
+        var viewParams = changeInfo.oldHolder?.itemView?.getTag(R.string.view_params) as SampleItemListHelper.ViewParams
         if (view != null) {
 
             mChangeAnimations.add(changeInfo.oldHolder!!)
@@ -546,11 +549,12 @@ class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): SimpleIte
         if (viewParams!=null) {
             val xHolder = PropertyValuesHolder.ofFloat("x",viewParams.xPos,300f)
             val yHolder = PropertyValuesHolder.ofFloat("y",viewParams.yPos,500f)
-            var valueAnimator = ValueAnimator.ofPropertyValuesHolder(xHolder,yHolder)
+            var valueAnimator = ObjectAnimator.ofPropertyValuesHolder(changeInfo.oldHolder!!.itemView,xHolder,yHolder)
             valueAnimator.apply {
                 duration = changeDuration
                 addUpdateListener {
                     updateTarget.onAnimateUpdate(this)
+                    Log.e("Animated", "x=${this.getAnimatedValue("x")}, y=${this.getAnimatedValue("y")}")
                 }
                 addListener(object: Animator.AnimatorListener{
                     override fun onAnimationRepeat(p0: Animator?) {
@@ -565,7 +569,7 @@ class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): SimpleIte
                     }
 
                     override fun onAnimationStart(p0: Animator?) {
-                        dispatchChangeStarting(changeInfo.newHolder, true)
+                        dispatchChangeStarting(changeInfo.oldHolder, true)
                     }
                 })
                 start()
