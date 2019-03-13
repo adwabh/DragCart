@@ -29,8 +29,8 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
         drawX = (animator.getAnimatedValue("x") as Float)
         drawY = (animator.getAnimatedValue("y") as Float)
         Log.d("Animated", "updated x=$drawX, y=$drawY")
-        image.x = drawX
-        image.y = drawY
+//        image.translationX = drawX
+//        image.translationY = drawY
     }
 
     var lastX:Float = 0f
@@ -48,6 +48,7 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
     }
 
     override fun onMove(p0: RecyclerView, source: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+
         return source.itemViewType == target.itemViewType
     }
 
@@ -87,13 +88,22 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
     }
 
 
+    private var firstMove: Boolean = false
+
     override fun onChildDrawOver(canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder?, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+        super.onChildDrawOver(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         var copy = ViewCaptureUtils.copyViewImageAsBitmap(viewHolder?.itemView!!)
         if(isCurrentlyActive){
-                drawEnclosed(canvas, viewHolder, copy, dX, dY)
-                lastX = dX
-                lastY = dY
+            drawEnclosed(canvas, viewHolder, copy, dX, dY)
+            lastX = dX
+            lastY = dY
+            firstMove = true
         }else{
+            if (firstMove) {
+                viewHolder.itemView.setTag(R.string.view_params,viewParams)
+                recyclerView.adapter?.notifyItemChanged(viewHolder.adapterPosition)
+                firstMove = false
+            }
             Log.e("Animated", "x=$drawX, y=$drawY")
             drawEnclosed(canvas,viewHolder,copy,drawX,drawY)
         }
@@ -117,22 +127,18 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
 
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        image = ImageView(recyclerView.context)
-        image.setImageBitmap(viewParams.bitmap)
-        image.apply {
-            layoutParams = ViewGroup.LayoutParams(viewHolder.itemView.height,viewHolder.itemView.width)
-            layoutParams.height = viewParams.height.toInt()
-            layoutParams.width = viewParams.width.toInt()
-            x = viewParams.xPos
-            y = viewParams.yPos - viewHolder.itemView.top
-//            translationX = -viewParams.xPos
-//            translationY = -viewParams.yPos
-
-//            setImageBitmap(Bitmap.createScaledBitmap(viewParams.bitmap,viewParams.width.toInt(),viewParams.height.toInt(),false))
-        }
-        root?.addView(image)
-        viewHolder.itemView.setTag(R.string.view_params,viewParams)
-        recyclerView.adapter?.notifyItemChanged(viewHolder.adapterPosition)
+//        image = ImageView(recyclerView.context)
+//        image.setImageBitmap(viewParams.bitmap)
+//        image.apply {
+//            layoutParams = ViewGroup.LayoutParams(viewHolder.itemView.height,viewHolder.itemView.width)
+//            layoutParams.height = viewParams.height.toInt()
+//            layoutParams.width = viewParams.width.toInt()
+//            x = viewParams.xPos - recyclerView.left
+//            y = viewParams.yPos - recyclerView.top
+//        }
+//        root?.addView(image)
+//        viewHolder.itemView.setTag(R.string.view_params,viewParams)
+//        recyclerView.adapter?.notifyItemChanged(viewHolder.adapterPosition)
     }
 
     private fun animateToDestinationIfNecessary(image: ImageView,viewHolder: RecyclerView.ViewHolder) {

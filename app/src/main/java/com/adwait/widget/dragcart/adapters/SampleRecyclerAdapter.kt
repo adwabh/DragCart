@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom
 class SampleRecyclerAdapter : RecyclerView.Adapter<SampleRecyclerAdapter.SampleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SampleViewHolder {
-        var itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_sample,parent,false);
+        var itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_card_new,parent,false);
         return SampleViewHolder(itemView)
     }
 
@@ -26,12 +26,13 @@ class SampleRecyclerAdapter : RecyclerView.Adapter<SampleRecyclerAdapter.SampleV
 
     override fun onBindViewHolder(viewHolder: SampleViewHolder, position: Int) {
         var pos = position% names.size
-        viewHolder.textView_name?.text = names[pos]
+        viewHolder.imageView2?.setImageResource(imageIdS[pos])
+        /*viewHolder.textView_name?.text = names[pos]
         viewHolder.textView_status?.text =  if(pos%2==0){ "Transferred"}else{"Pending"}
         viewHolder.textView_amount?.text = randomAmount()
         viewHolder.imageView_logo?.setImageResource(R.mipmap.ic_launcher)
         viewHolder.imageView_alert?.setImageResource(R.drawable.ic_notifications_black_24dp)
-        viewHolder.textView_date?.setText(R.string.sample_date)
+        viewHolder.textView_date?.setText(R.string.sample_date)*/
 
     }
     private fun randomAmount():String{
@@ -64,33 +65,36 @@ class SampleRecyclerAdapter : RecyclerView.Adapter<SampleRecyclerAdapter.SampleV
      * */
 
     class SampleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var textView_name:TextView?=null
-        var textView_amount_static:TextView?=null
-        var textView_amount:TextView?=null
-        var textView_date_static:TextView?=null
-        var textView_date:TextView?=null
-        var textView_status_static:TextView?=null
-        var textView_status:TextView?=null
-        
-        var imageView_logo:ImageView?=null
-        var imageView_alert:ImageView?=null
+//        var textView_name:TextView?=null
+//        var textView_amount_static:TextView?=null
+//        var textView_amount:TextView?=null
+//        var textView_date_static:TextView?=null
+//        var textView_date:TextView?=null
+//        var textView_status_static:TextView?=null
+//        var textView_status:TextView?=null
+//
+//        var imageView_logo:ImageView?=null
+//        var imageView_alert:ImageView?=null
+        var imageView2:ImageView?=null
 
         init {
-           textView_name = itemView.findViewById(R.id.textView_name) 
-           textView_amount_static = itemView.findViewById(R.id.textView_amount_static) 
-           textView_amount = itemView.findViewById(R.id.textView_amount) 
-           textView_date_static = itemView.findViewById(R.id.textView_date_static) 
-           textView_date = itemView.findViewById(R.id.textView_date) 
-           textView_status_static = itemView.findViewById(R.id.textView_status_static)
-           textView_status = itemView.findViewById(R.id.textView_status)
-           imageView_alert = itemView.findViewById(R.id.imageView_alert)
-           imageView_logo = itemView.findViewById(R.id.imageView_logo)
+//           textView_name = itemView.findViewById(R.id.textView_name)
+//           textView_amount_static = itemView.findViewById(R.id.textView_amount_static)
+//           textView_amount = itemView.findViewById(R.id.textView_amount)
+//           textView_date_static = itemView.findViewById(R.id.textView_date_static)
+//           textView_date = itemView.findViewById(R.id.textView_date)
+//           textView_status_static = itemView.findViewById(R.id.textView_status_static)
+//           textView_status = itemView.findViewById(R.id.textView_status)
+//           imageView_alert = itemView.findViewById(R.id.imageView_alert)
+//           imageView_logo = itemView.findViewById(R.id.imageView_logo)
+             imageView2 = itemView.findViewById(R.id.imageView2)
         }
     }
 
     companion object {
         private const val STATIC_NUMBER: Int = 10
         private val names = arrayOf("Dribble","Pintrest","Behance","YouTube","Twitter","Facebook","LinkedIn","WhatsApp","Instagram","Medium")
+        private val imageIdS = arrayOf(R.drawable.p1,R.drawable.p2,R.drawable.p3,R.drawable.p4,R.drawable.p5,R.drawable.p6,R.drawable.p7,R.drawable.p8,R.drawable.p9,R.drawable.p10)
 
     }
 }
