@@ -19,7 +19,7 @@ import com.adwait.widget.dragcart.R
  * http://blog.trsquarelab.com/2015/12/creating-custom-animation-in.html
  *  https://android.googlesource.com/platform/frameworks/support/+/c110be5/v7/recyclerview/src/android/support/v7/widget/DefaultItemAnimator.java
  */
-class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): SimpleItemAnimator() {
+open class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): SimpleItemAnimator() {
 
     interface UpdateListener {
         fun onAnimateUpdate(animator:ValueAnimator)

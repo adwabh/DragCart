@@ -9,15 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.adwait.widget.dragcart.R
 import com.adwait.widget.dragcart.adapters.SampleRecyclerAdapter
+import com.adwait.widget.dragcart.utils.ModifiedItemListHelper
 import com.adwait.widget.dragcart.utils.SampleItemAnimator
-import com.adwait.widget.dragcart.utils.SampleItemListHelper
 import kotlinx.android.synthetic.main.fragment_list.*
 
 /**
  * Created by Adwait Abhyankar on 1/6/2019.
  */
 class SampleListFragment : Fragment() {
-    private lateinit var touchHelper: SampleItemListHelper
+    private lateinit var touchHelper: ItemTouchHelper.Callback
+    lateinit var anchor:View
 
     companion object {
         fun newInstance():SampleListFragment{
@@ -39,12 +40,9 @@ class SampleListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        recyclerView_content.layoutManager = GridLayoutManager(activity,3,GridLayoutManager.VERTICAL,false)//LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false)
+        recyclerView_content.layoutManager = GridLayoutManager(activity,3,GridLayoutManager.VERTICAL,false)//TouchSensitiveLayoutManager(activity!!,recyclerView_content,3,GridLayoutManager.VERTICAL,false)
         recyclerView_content.adapter = SampleRecyclerAdapter()
-        touchHelper = SampleItemListHelper(recyclerView_content.parent as ViewGroup?)
+        touchHelper = ModifiedItemListHelper(activity!!, anchor, R.color.colorAccent, R.drawable.ic_shopping_cart, recyclerView_content)
         ItemTouchHelper(touchHelper).attachToRecyclerView(recyclerView_content)
-
-        itemAnimator = SampleItemAnimator(root,touchHelper)
-        recyclerView_content.itemAnimator = itemAnimator
     }
 }
