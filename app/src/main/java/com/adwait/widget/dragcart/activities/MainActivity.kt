@@ -1,8 +1,10 @@
 package com.adwait.widget.dragcart.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
+import android.view.ActionMode
 import android.view.View
 import com.adwait.widget.dragcart.R
 import com.adwait.widget.dragcart.fragments.SampleListFragment
@@ -26,4 +28,6 @@ class MainActivity : AppCompatActivity() {
         this?.commit()
         }
     }
+
+
 }

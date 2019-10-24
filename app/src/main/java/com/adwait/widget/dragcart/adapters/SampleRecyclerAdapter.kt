@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.adwait.widget.dragcart.R
+import com.adwait.widget.dragcart.utils.CartViewHolder
 import java.util.concurrent.ThreadLocalRandom
 
 
@@ -64,7 +65,7 @@ class SampleRecyclerAdapter : RecyclerView.Adapter<SampleRecyclerAdapter.SampleV
     }
      * */
 
-    class SampleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class SampleViewHolder(itemView: View) : CartViewHolder(itemView) {
 //        var textView_name:TextView?=null
 //        var textView_amount_static:TextView?=null
 //        var textView_amount:TextView?=null

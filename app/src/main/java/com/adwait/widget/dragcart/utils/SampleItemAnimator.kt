@@ -28,7 +28,7 @@ open class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): Simp
     private val fabX: Float = 300f
     private val fabY: Float = 500f
     private val root: ViewGroup = root
-    private val updateTarget = updateTarget
+    protected val updateTarget = updateTarget
     private lateinit var currentAnimator: ValueAnimator
 
     private val DEBUG = false
@@ -306,7 +306,7 @@ open class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): Simp
 
     private data class MoveInfo private constructor(var holder: ViewHolder, var fromX: Int, var fromY: Int, var toX: Int, var toY: Int)
 
-    private class ChangeInfo private constructor(var oldHolder: ViewHolder?, var newHolder: ViewHolder?) {
+    class ChangeInfo private constructor(var oldHolder: ViewHolder?, var newHolder: ViewHolder?) {
         var fromX: Int = 0
         var fromY: Int = 0
         var toX: Int = 0
@@ -493,7 +493,7 @@ open class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): Simp
         }).start()
     }
 
-    private fun animateChangeImpl(changeInfo: ChangeInfo) {
+    open fun animateChangeImpl(changeInfo: ChangeInfo) {
         val holder = changeInfo.oldHolder
         val view = holder?.itemView
         val newHolder = changeInfo.newHolder
@@ -541,40 +541,7 @@ open class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): Simp
                 }
             }).start()
         }
-        animateToCart(changeInfo)
-    }
-
-    private fun animateToCart(changeInfo: ChangeInfo) {
-        var viewParams = changeInfo.oldHolder?.itemView?.getTag(R.string.view_params) as SampleItemListHelper.ViewParams
-        if (viewParams!=null) {
-            val xHolder = PropertyValuesHolder.ofFloat("x",viewParams.xPos,300f)
-            val yHolder = PropertyValuesHolder.ofFloat("y",viewParams.yPos,500f)
-            var valueAnimator = ObjectAnimator.ofPropertyValuesHolder(changeInfo.oldHolder!!.itemView,xHolder,yHolder)
-            valueAnimator.apply {
-                duration = changeDuration
-                addUpdateListener {
-                    updateTarget.onAnimateUpdate(this)
-                    Log.e("Animated", "x=${this.getAnimatedValue("x")}, y=${this.getAnimatedValue("y")}")
-                }
-                addListener(object: Animator.AnimatorListener{
-                    override fun onAnimationRepeat(p0: Animator?) {
-                    }
-
-                    override fun onAnimationEnd(p0: Animator?) {
-                        dispatchFinishedWhenDone()
-                    }
-
-                    override fun onAnimationCancel(p0: Animator?) {
-                        dispatchFinishedWhenDone()
-                    }
-
-                    override fun onAnimationStart(p0: Animator?) {
-                        dispatchChangeStarting(changeInfo.oldHolder, true)
-                    }
-                })
-                start()
-            }
-        }
+//        animateToCart(changeInfo)
     }
 
     /**
@@ -582,7 +549,7 @@ open class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): Simp
      * pending/running, call [.dispatchAnimationsFinished] to notify any
      * listeners.
      */
-    private fun dispatchFinishedWhenDone() {
+    protected fun dispatchFinishedWhenDone() {
         if (!isRunning) {
             dispatchAnimationsFinished()
         }
