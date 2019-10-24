@@ -1,5 +1,7 @@
 package com.adwait.widget.dragcart.utils
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Build
@@ -135,8 +137,35 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
         return max
     }
 
+
+    //TODO:outsource
+    fun animateCart(oldHolder: CartViewHolder) {
+
+    }
+
+    //TODO:outsource
     fun removeAnimated(oldHolder: CartViewHolder) {
         mAddedToCart.remove(oldHolder)
-        super.clearView(recyclerView,oldHolder)
+        oldHolder.animateRestore()
+        ObjectAnimator.ofFloat(oldHolder.itemView,"alpha",0.0f,1.0f).apply{
+            duration = 600
+            start()
+        }
+    }
+
+    private inline fun CartViewHolder.animateRestore(){
+        this.itemView.apply {
+            if (Build.VERSION.SDK_INT >= 21) {
+                val tag = getTag(android.support.v7.recyclerview.R.id.item_touch_helper_previous_elevation)
+                if (tag != null && tag is Float) {
+                    ViewCompat.setElevation(this, tag as Float)
+                }
+
+                setTag(android.support.v7.recyclerview.R.id.item_touch_helper_previous_elevation, null as Any?)
+            }
+            alpha = 0.0f
+            translationX = 0.0f
+            translationY = 0.0f
+        }
     }
 }
