@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import com.adwait.widget.dragcart.R
 import com.adwait.widget.dragcart.utils.CartViewHolder
+import com.squareup.picasso.Picasso
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_card_new.*
 import java.util.concurrent.ThreadLocalRandom
 
 
@@ -15,10 +17,11 @@ import java.util.concurrent.ThreadLocalRandom
  * Created by Adwait Abhyankar on 1/4/2019.
  */
 class SampleRecyclerAdapter : RecyclerView.Adapter<SampleRecyclerAdapter.SampleViewHolder>() {
+    val picasso = Picasso.get()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SampleViewHolder {
         var itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_card_new,parent,false);
-        return SampleViewHolder(itemView)
+        return SampleViewHolder(itemView,picasso)
     }
 
     override fun getItemCount(): Int {
@@ -27,7 +30,7 @@ class SampleRecyclerAdapter : RecyclerView.Adapter<SampleRecyclerAdapter.SampleV
 
     override fun onBindViewHolder(viewHolder: SampleViewHolder, position: Int) {
         var pos = position% names.size
-        viewHolder.imageView2?.setImageResource(imageIdS[pos])
+        viewHolder.bind(imageIdS[pos])
         /*viewHolder.textView_name?.text = names[pos]
         viewHolder.textView_status?.text =  if(pos%2==0){ "Transferred"}else{"Pending"}
         viewHolder.textView_amount?.text = randomAmount()
@@ -65,30 +68,10 @@ class SampleRecyclerAdapter : RecyclerView.Adapter<SampleRecyclerAdapter.SampleV
     }
      * */
 
-    class SampleViewHolder(itemView: View) : CartViewHolder(itemView) {
-//        var textView_name:TextView?=null
-//        var textView_amount_static:TextView?=null
-//        var textView_amount:TextView?=null
-//        var textView_date_static:TextView?=null
-//        var textView_date:TextView?=null
-//        var textView_status_static:TextView?=null
-//        var textView_status:TextView?=null
-//
-//        var imageView_logo:ImageView?=null
-//        var imageView_alert:ImageView?=null
-        var imageView2:ImageView?=null
+    class SampleViewHolder(override val containerView: View, val picasso: Picasso) : CartViewHolder(containerView),LayoutContainer {
 
-        init {
-//           textView_name = itemView.findViewById(R.id.textView_name)
-//           textView_amount_static = itemView.findViewById(R.id.textView_amount_static)
-//           textView_amount = itemView.findViewById(R.id.textView_amount)
-//           textView_date_static = itemView.findViewById(R.id.textView_date_static)
-//           textView_date = itemView.findViewById(R.id.textView_date)
-//           textView_status_static = itemView.findViewById(R.id.textView_status_static)
-//           textView_status = itemView.findViewById(R.id.textView_status)
-//           imageView_alert = itemView.findViewById(R.id.imageView_alert)
-//           imageView_logo = itemView.findViewById(R.id.imageView_logo)
-             imageView2 = itemView.findViewById(R.id.imageView2)
+        fun bind(i: Int) {
+            picasso.load(i).fit().into(imageView2)
         }
     }
 

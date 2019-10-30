@@ -43,13 +43,13 @@ class ModifiedItemListAnimator(root: ViewGroup, private val itemListHelper:Halfw
 
                     override fun onAnimationEnd(p0: Animator?) {
                         dispatchFinishedWhenDone()
-                        itemListHelper.removeAnimated(oldHolder)
+                        itemListHelper.animateCart(oldHolder)
                         Log.e("Animated", "onAnimationEnd")
                     }
 
                     override fun onAnimationCancel(p0: Animator?) {
                         dispatchFinishedWhenDone()
-                        itemListHelper.removeAnimated(oldHolder)
+                        itemListHelper.animateCart(oldHolder)
                         Log.e("Animated", "onAnimationCancel")
                     }
 
