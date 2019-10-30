@@ -49,7 +49,7 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     }
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-        return if (recyclerView.layoutManager is GridLayoutManager) {
+        /*return if (recyclerView.layoutManager is GridLayoutManager) {
             val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
             val swipeFlags = 0
             makeMovementFlags(dragFlags, swipeFlags)
@@ -57,10 +57,10 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
             val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
             val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
             makeMovementFlags(dragFlags, swipeFlags)
-        }
-        /*val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        }*/
+        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         val swipeFlags = 0
-        return makeMovementFlags(dragFlags, swipeFlags)*/
+        return makeMovementFlags(dragFlags, swipeFlags)
     }
 
     override fun onMove(recyclerView: RecyclerView, source: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -106,6 +106,12 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
                 }
             }
         }
+    }
+
+    override fun getMoveThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+        var positionVector = Math.hypot(viewHolder.itemView.width.toDouble(),viewHolder.itemView.height.toDouble())
+        cartX
+        return super.getMoveThreshold(viewHolder)
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {

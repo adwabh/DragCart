@@ -48,7 +48,7 @@ class SampleListFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        recyclerView_content.layoutManager = GridLayoutManager(activity,3,GridLayoutManager.VERTICAL,false)//TouchSensitiveLayoutManager(activity!!,recyclerView_content,3,GridLayoutManager.VERTICAL,false)//LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
+        recyclerView_content.layoutManager = StackLayoutManager(activity as Context,recyclerView_content)//LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
         recyclerView_content.adapter = SampleRecyclerAdapter()
 //        touchHelper = ModifiedItemListHelper(activity!!, anchor, R.color.colorAccent, R.drawable.ic_shopping_cart, recyclerView_content)
         touchHelper = HalfwayItemListHelper(recyclerView_content, anchor, callback, count)

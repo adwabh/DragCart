@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom
  * Created by Adwait Abhyankar on 1/4/2019.
  */
 class SampleRecyclerAdapter : RecyclerView.Adapter<SampleRecyclerAdapter.SampleViewHolder>() {
-    val picasso = Picasso.get()
+    private val picasso:Picasso = Picasso.get()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SampleViewHolder {
         var itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_card_new,parent,false);
@@ -31,42 +31,7 @@ class SampleRecyclerAdapter : RecyclerView.Adapter<SampleRecyclerAdapter.SampleV
     override fun onBindViewHolder(viewHolder: SampleViewHolder, position: Int) {
         var pos = position% names.size
         viewHolder.bind(imageIdS[pos])
-        /*viewHolder.textView_name?.text = names[pos]
-        viewHolder.textView_status?.text =  if(pos%2==0){ "Transferred"}else{"Pending"}
-        viewHolder.textView_amount?.text = randomAmount()
-        viewHolder.imageView_logo?.setImageResource(R.mipmap.ic_launcher)
-        viewHolder.imageView_alert?.setImageResource(R.drawable.ic_notifications_black_24dp)
-        viewHolder.textView_date?.setText(R.string.sample_date)*/
-
     }
-    private fun randomAmount():String{
-        return formatCurrency(ThreadLocalRandom.current().nextInt(1, 999999 + 1).toFloat(),
-                "$")
-    }
-
-    private fun formatCurrency(number:Float,currency: String):String{
-        var formated = formatDecimal(number)
-        return "$currency $formated"
-    }
-    private fun formatDecimal(number:Float):String{
-        var epsilon:Float = 0.004f
-        return if(Math.abs(Math.round(number)- epsilon) < epsilon){
-            String.format("%10.0f", number)
-        }else{
-            String.format("%10.2f", number)
-        }
-    }
-
-    /**
-     * public String formatDecimal(float number) {
-    float epsilon = 0.004f; // 4 tenths of a cent
-    if (Math.abs(Math.round(number) - number) < epsilon) {
-    return String.format("%10.0f", number); // sdb
-    } else {
-    return String.format("%10.2f", number); // dj_segfault
-    }
-    }
-     * */
 
     class SampleViewHolder(override val containerView: View, val picasso: Picasso) : CartViewHolder(containerView),LayoutContainer {
 
