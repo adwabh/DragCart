@@ -4,8 +4,6 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +13,9 @@ import com.adwait.widget.dragcart.adapters.SampleRecyclerAdapter
 import com.adwait.widget.dragcart.utils.*
 
 import kotlinx.android.synthetic.main.fragment_list.*
+
+
+
 
 
 
@@ -48,10 +49,12 @@ class SampleListFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        recyclerView_content.layoutManager = StackLayoutManager(activity as Context,recyclerView_content)//LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
+        val layoutManager = StackLayoutManager(activity as Context,recyclerView_content)//LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
+        recyclerView_content.layoutManager = layoutManager
+//        recyclerView_content.layoutManager = com.littlemango.stacklayoutmanager.StackLayoutManager()
         recyclerView_content.adapter = SampleRecyclerAdapter()
 //        touchHelper = ModifiedItemListHelper(activity!!, anchor, R.color.colorAccent, R.drawable.ic_shopping_cart, recyclerView_content)
-        touchHelper = HalfwayItemListHelper(recyclerView_content, anchor, callback, count)
+        touchHelper = HalfwayItemListHelper(recyclerView_content, anchor, callback, count, layoutManager)
         recyclerView_content.itemAnimator = ModifiedItemListAnimator(recyclerView_content.parent as ViewGroup, touchHelper, object:SampleItemAnimator.UpdateListener{
             override fun onAnimateUpdate(animator: ValueAnimator) {
 

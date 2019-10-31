@@ -16,7 +16,7 @@ class StackLayoutManager(context: Context, private val mRecyclerView: RecyclerVi
     private val mDragThresholdX: Int
     private val mDragThresholdY: Int
 
-    private val mCardOffset = 10
+    private val mCardOffset = 20
     private val mCardElevation = 10
     private val mVisibleCardCount = 3
 

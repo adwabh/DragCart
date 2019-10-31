@@ -6,16 +6,15 @@ import android.animation.PropertyValuesHolder
 import android.graphics.Canvas
 import android.os.Build
 import android.support.v4.view.ViewCompat
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_DRAG
+import android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.FrameLayout
 import com.adwait.widget.dragcart.R
-import kotlinx.android.extensions.LayoutContainer
 import kotlin.math.hypot
 
 
@@ -24,7 +23,7 @@ import kotlin.math.hypot
  * Pitney-Bowes
  * adwait.abhyankar@pb.com
  */
-class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: View, private val callback: () -> Unit,private val containerView:ViewGroup) : ItemTouchHelper.Callback() {
+class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: View, private val callback: () -> Unit, private val containerView: ViewGroup, val stackLayoutManager: StackLayoutManager) : ItemTouchHelper.Callback() {
 
     private var toCart: Boolean = false
     private val DRAG_THREASHHOLD: Long = 300
@@ -49,17 +48,17 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     }
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-        /*return if (recyclerView.layoutManager is GridLayoutManager) {
-            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-            val swipeFlags = 0
-            makeMovementFlags(dragFlags, swipeFlags)
-        } else {
-            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-            makeMovementFlags(dragFlags, swipeFlags)
-        }*/
-        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        val swipeFlags = 0
+//        return if (recyclerView.layoutManager is GridLayoutManager) {
+//            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+//            val swipeFlags = 0
+//            makeMovementFlags(dragFlags, swipeFlags)
+//        } else {
+//            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+//            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
+//            makeMovementFlags(dragFlags, swipeFlags)
+//        }
+        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+        val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
         return makeMovementFlags(dragFlags, swipeFlags)
     }
 
@@ -68,7 +67,9 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     }
 
     override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
-
+        recyclerView.adapter?.let {
+            it.notifyItemMoved(p1,it.itemCount-1)
+        }
     }
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
@@ -89,20 +90,29 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
                 }
             }
 
-            if (isCurrentlyActive) {
-                viewHolder.itemView.translationX = dX
-                viewHolder.itemView.translationY = dY
-                finalX = dX
-                finalY = dY
-            }else {
-                if (!toCart) {
-                    toCart = if(Math.hypot(dX.toDouble(),dY.toDouble())/Math.hypot(viewHolder.itemView.width.toDouble(),viewHolder.itemView.height.toDouble())<=1)  {
+            when(actionState) {
+                ACTION_STATE_DRAG-> {
+                    if (isCurrentlyActive) {
                         viewHolder.itemView.translationX = dX
                         viewHolder.itemView.translationY = dY
-                        false
-                    }else{
-                        true
+                        finalX = dX
+                        finalY = dY
+                    } else {
+                        if (!toCart) {
+                            toCart = if (Math.hypot(dX.toDouble(), dY.toDouble()) / Math.hypot(viewHolder.itemView.width.toDouble(), viewHolder.itemView.height.toDouble()) <= 1) {
+                                viewHolder.itemView.translationX = dX
+                                viewHolder.itemView.translationY = dY
+                                false
+                            } else {
+                                true
+                            }
+                        }
                     }
+                }
+                ACTION_STATE_SWIPE->{
+                    viewHolder.itemView.translationX = dX
+                    viewHolder.itemView.translationY = dY
+                    stackLayoutManager.refreshOtherVisibleCardsPosition(dX,dY)
                 }
             }
         }
