@@ -25,6 +25,7 @@ class ModifiedItemListAnimator(root: ViewGroup, private val itemListHelper:Halfw
         Log.d("Animated","canReuse = $canReuse")
         return true
     }
+
     private fun animateToCartImpl(changeInfo: MoveToCartInfo, oldHolder: CartViewHolder, newHolder: RecyclerView.ViewHolder?,itemListHelper: HalfwayItemListHelper): Boolean {
             Log.d("Animated", "old=$oldHolder, new=$newHolder")
 

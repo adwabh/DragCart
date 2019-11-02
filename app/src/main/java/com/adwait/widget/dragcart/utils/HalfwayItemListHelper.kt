@@ -3,7 +3,10 @@ package com.adwait.widget.dragcart.utils
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.os.Build
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.GridLayoutManager
@@ -13,9 +16,10 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.FrameLayout
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import com.adwait.widget.dragcart.R
-import kotlinx.android.extensions.LayoutContainer
 import kotlin.math.hypot
 
 
@@ -26,6 +30,17 @@ import kotlin.math.hypot
  */
 class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: View, private val callback: () -> Unit,private val containerView:ViewGroup) : ItemTouchHelper.Callback() {
 
+    private var cartAnimatedFraction: Float = 0f
+    private var finalRadius: Float = 0f
+    private val mInterpolator = LinearInterpolator()
+    @SuppressLint("ResourceAsColor")
+    private val paint: Paint = Paint().apply{
+        color = R.color.colorAccent
+    }
+    private val bitmap = ModifiedItemListHelper.drawableToBitmap(recyclerView.context.getDrawable(R.drawable.ic_shopping_cart))
+
+    private lateinit var mValueAnimator: ValueAnimator
+    private val _RADIUS: Float = 300f
     private var toCart: Boolean = false
     private val DRAG_THREASHHOLD: Long = 300
     private var count: Int = 0
@@ -85,27 +100,48 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
                     originalElevation = ViewCompat.getElevation(viewHolder.itemView)
                     val newElevation = 1.0f + findMaxElevation(recyclerView, viewHolder.itemView)
                     ViewCompat.setElevation(viewHolder.itemView, newElevation)
-                    viewHolder.itemView.setTag(R.id.item_touch_helper_previous_elevation, originalElevation)
+                    it.itemView.setTag(R.id.item_touch_helper_previous_elevation, originalElevation)
                 }
             }
 
             if (isCurrentlyActive) {
-                viewHolder.itemView.translationX = dX
-                viewHolder.itemView.translationY = dY
+                it.itemView.translationX = dX
+                it.itemView.translationY = dY
                 finalX = dX
                 finalY = dY
+                drawCart(c,viewHolder,recyclerView,getCartThreshold(dX.toDouble(),dY.toDouble(),viewHolder))
+
             }else {
                 if (!toCart) {
-                    toCart = if(Math.hypot(dX.toDouble(),dY.toDouble())/Math.hypot(viewHolder.itemView.width.toDouble(),viewHolder.itemView.height.toDouble())<=1)  {
-                        viewHolder.itemView.translationX = dX
-                        viewHolder.itemView.translationY = dY
+                    toCart = if(getCartThreshold(dX.toDouble(),dY.toDouble(),viewHolder) <=1)  {
+                        it.itemView.translationX = dX
+                        it.itemView.translationY = dY
                         false
                     }else{
+                        //animate draw circle here
+                        mValueAnimator = ValueAnimator.ofFloat(finalRadius,_RADIUS)
+                        with(mValueAnimator){
+                            duration = 150
+                            start()
+                        }
                         true
                     }
+
                 }
+//                if (mValueAnimator.isRunning) {
+//                    drawCart(c,viewHolder,recyclerView,mValueAnimator)
+//                }else{
+//                    drawCart(c,viewHolder,recyclerView,cartAnimatedFraction.toDouble())
+//                Log.i("Animated","drawCalled with $cartAnimatedFraction")
+//                }
             }
         }
+    }
+
+
+
+    private fun getCartThreshold(dX: Double, dY: Double, viewHolder: RecyclerView.ViewHolder): Double {
+        return Math.hypot(dX,dY)/Math.hypot(viewHolder.itemView.width.toDouble(),viewHolder.itemView.height.toDouble())
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
@@ -248,5 +284,43 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
             translationX = 0.0f
             translationY = 0.0f
         }
+    }
+
+    private fun drawCart(canvas: Canvas, viewHolder: RecyclerView.ViewHolder, recyclerView: RecyclerView, animator: ValueAnimator) {
+        val cx= this.cartX// - viewHolder.itemView.left;
+        val cy = this.cartY //- viewHolder.itemView.top
+        canvas.drawCircle(
+                cx,
+                cy,
+                animator.animatedValue as Float,
+                paint
+        )
+        if (animator.animatedFraction<0.8f) {
+            bitmap.let {
+                canvas.drawBitmap(it, cx - it.width/2, cy - it.height/2, paint)
+            }
+        }
+    }
+
+    private fun drawCart(canvas: Canvas, viewHolder: RecyclerView.ViewHolder, recyclerView: RecyclerView, animator: Double) {
+        val cx= this.cartX// - viewHolder.itemView.left;
+        val cy = this.cartY //- viewHolder.itemView.top
+        finalRadius = _RADIUS*mInterpolator.getInterpolation(animator.toFloat())
+        canvas.drawCircle(
+                cx,
+                cy,
+                kotlin.math.min(_RADIUS,finalRadius),
+                paint
+        )
+        if (animator.toFloat()<0.8f) {
+            bitmap.let {
+                canvas.drawBitmap(it, cx - it.width/2, cy - it.height/2, paint)
+            }
+        }
+    }
+
+    fun onAnimateCartUpdate(animator: ValueAnimator) {
+        cartAnimatedFraction = animator.animatedFraction
+        Log.w("Animated","cartAnimationProgress = $cartAnimatedFraction")
     }
 }

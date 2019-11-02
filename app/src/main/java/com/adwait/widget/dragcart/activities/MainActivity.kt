@@ -35,8 +35,4 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    var a:Int = 0
-    var b = 9
-    var lambda : (Int,Int)->Unit = {a:Int , b:Int->a+b}
-
 }
