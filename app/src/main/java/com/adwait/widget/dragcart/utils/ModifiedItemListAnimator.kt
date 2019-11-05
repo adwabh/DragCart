@@ -21,7 +21,7 @@ class ModifiedItemListAnimator(root: ViewGroup, private val itemListHelper:Halfw
 
 
     override fun canReuseUpdatedViewHolder(viewHolder: RecyclerView.ViewHolder): Boolean {
-        var canReuse = super.canReuseUpdatedViewHolder(viewHolder);
+        var canReuse = super.canReuseUpdatedViewHolder(viewHolder)
         Log.d("Animated","canReuse = $canReuse")
         return true
     }
@@ -43,13 +43,13 @@ class ModifiedItemListAnimator(root: ViewGroup, private val itemListHelper:Halfw
                     }
 
                     override fun onAnimationEnd(p0: Animator?) {
-                        dispatchFinishedWhenDone()
+                        dispatchChangeFinished(oldHolder,true)
                         itemListHelper.animateCart(oldHolder)
                         Log.e("Animated", "onAnimationEnd")
                     }
 
                     override fun onAnimationCancel(p0: Animator?) {
-                        dispatchFinishedWhenDone()
+                        dispatchChangeFinished(oldHolder,true)
                         itemListHelper.animateCart(oldHolder)
                         Log.e("Animated", "onAnimationCancel")
                     }

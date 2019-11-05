@@ -53,6 +53,7 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
     fun onAnimateCartUpdate(animator: ValueAnimator) {
         cartAnimationFraction = animator.animatedFraction
         Log.w("Animated","cartAnimationProgress = $cartAnimationFraction")
+        recyclerView.invalidate()
 
     }
 
