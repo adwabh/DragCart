@@ -56,11 +56,9 @@ class SampleListFragment: Fragment() {
         touchHelper = HalfwayItemListHelper(recyclerView_content, anchor, callback, count)
         recyclerView_content.itemAnimator = ModifiedItemListAnimator(recyclerView_content.parent as ViewGroup, touchHelper, object:SampleItemAnimator.UpdateListener{
             override var animationEndAction = {
-                anchor.alpha = 1f
                 cartDecoration.reset()
             }
             override var animationCancelAction = {
-                anchor.alpha = 1f
                 cartDecoration.reset()
             }
             override var animationStartAction = {}
@@ -68,7 +66,6 @@ class SampleListFragment: Fragment() {
             override fun onAnimateUpdate(animator: ValueAnimator) {
                 touchHelper.onAnimateCartUpdate(animator)
                 cartDecoration.onAnimateCartUpdate(animator)
-                anchor.alpha = animator.animatedFraction
             }
         })
         ItemTouchHelper(touchHelper).attachToRecyclerView(recyclerView_content)

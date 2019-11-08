@@ -37,6 +37,9 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     private val paint: Paint = Paint().apply{
         color = recyclerView.context.getColor(R.color.colorAccent)
     }
+    private val bitmapPaint: Paint = Paint().apply{
+        color = recyclerView.context.getColor(android.R.color.white)
+    }
     private val bitmap = ModifiedItemListHelper.drawableToBitmap(recyclerView.context.getDrawable(R.drawable.ic_shopping_cart))
 
     private val _RADIUS: Float = 300f
@@ -109,7 +112,6 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
                 finalX = dX
                 finalY = dY
                 drawCart(c,viewHolder,recyclerView,getCartThreshold(dX.toDouble(),dY.toDouble(),viewHolder))
-
             }else {
                 if (!toCart) {
                     toCart = if(getCartThreshold(dX.toDouble(),dY.toDouble(),viewHolder) <=1)  {
@@ -184,9 +186,33 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
         return max
     }
 
+    //TODO:outsource
+    fun animateCartParentAlphaRestore(anchor:View ,oldHolder: CartViewHolder){
+        ObjectAnimator.ofFloat(anchor,"alpha",anchor.alpha,1.0f).apply {
+            duration = 150
+            addUpdateListener { anchor.alpha = this.animatedFraction }
+            addListener(object:Animator.AnimatorListener{
+                override fun onAnimationRepeat(p0: Animator?) {
+                }
+
+                override fun onAnimationEnd(p0: Animator?) {
+                    animateCartCount(oldHolder)
+                }
+
+                override fun onAnimationCancel(p0: Animator?) {
+                    animateCartCount(oldHolder)
+                }
+
+                override fun onAnimationStart(p0: Animator?) {
+
+                }
+            })
+            start()
+        }
+    }
 
     //TODO:outsource
-    fun animateCart(oldHolder: CartViewHolder) {
+    fun animateItemScaleInCart(oldHolder: CartViewHolder) {
         val ratio = 0.5f * (oldHolder.itemView.let { hypot(anchor.width.toFloat(), anchor.height.toFloat()) / hypot(it.width.toFloat(), it.height.toFloat()) })
         val scaleXHolder = PropertyValuesHolder.ofFloat("scaleX", 1.0f, ratio)
         val scaleYHolder = PropertyValuesHolder.ofFloat("scaleY", 1.0f, ratio)
@@ -198,11 +224,11 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
                 }
 
                 override fun onAnimationEnd(p0: Animator?) {
-                    animateCartCount(oldHolder)
+                    animateCartParentAlphaRestore(anchor,oldHolder)
                 }
 
                 override fun onAnimationCancel(p0: Animator?) {
-                    animateCartCount(oldHolder)
+                    animateCartParentAlphaRestore(anchor,oldHolder)
                 }
 
                 override fun onAnimationStart(p0: Animator?) {
@@ -302,9 +328,10 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
                 kotlin.math.min(_RADIUS,finalRadius),
                 paint
         )
+        anchor.alpha =0f
         if (animator.toFloat()<0.8f) {
             bitmap.let {
-                canvas.drawBitmap(it, cx - it.width/2, cy - it.height/2, paint)
+                canvas.drawBitmap(it, cx - it.width/2, cy - it.height/2, bitmapPaint)
             }
         }
     }
