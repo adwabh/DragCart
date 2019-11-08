@@ -35,11 +35,10 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     private val mInterpolator = LinearInterpolator()
     @SuppressLint("ResourceAsColor")
     private val paint: Paint = Paint().apply{
-        color = R.color.colorAccent
+        color = recyclerView.context.getColor(R.color.colorAccent)
     }
     private val bitmap = ModifiedItemListHelper.drawableToBitmap(recyclerView.context.getDrawable(R.drawable.ic_shopping_cart))
 
-    private lateinit var mValueAnimator: ValueAnimator
     private val _RADIUS: Float = 300f
     private var toCart: Boolean = false
     private val DRAG_THREASHHOLD: Long = 300
@@ -118,28 +117,17 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
                         it.itemView.translationY = dY
                         false
                     }else{
-                        //animate draw circle here
-                        mValueAnimator = ValueAnimator.ofFloat(finalRadius,_RADIUS)
-                        with(mValueAnimator){
-                            duration = 150
-                            start()
-                        }
                         true
                     }
-
+                }else{
+                    drawCart(c,viewHolder,recyclerView,cartAnimatedFraction.toDouble())
                 }
-//                if (mValueAnimator.isRunning) {
-//                    drawCart(c,viewHolder,recyclerView,mValueAnimator)
-//                }else{
-//                    drawCart(c,viewHolder,recyclerView,cartAnimatedFraction.toDouble())
-//                Log.i("Animated","drawCalled with $cartAnimatedFraction")
-//                }
             }
         }
     }
 
 
-
+//TODO: outsource
     private fun getCartThreshold(dX: Double, dY: Double, viewHolder: RecyclerView.ViewHolder): Double {
         return Math.hypot(dX,dY)/Math.hypot(viewHolder.itemView.width.toDouble(),viewHolder.itemView.height.toDouble())
     }
@@ -225,7 +213,7 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
             start()
         }
     }
-
+    //TODO:outsource
     private fun animateCartCount(oldHolder: CartViewHolder) {
         val scaleX = PropertyValuesHolder.ofFloat("scaleX", 0.0f, 1.1f)
         val scaleY = PropertyValuesHolder.ofFloat("scaleY",0.0f,1.1f)
@@ -269,6 +257,7 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
         }
     }
 
+    //TODO:outsource
     private fun CartViewHolder.animateRestore(){
         this.itemView.apply {
             if (Build.VERSION.SDK_INT >= 21) {
@@ -303,6 +292,7 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     }
 
     private fun drawCart(canvas: Canvas, viewHolder: RecyclerView.ViewHolder, recyclerView: RecyclerView, animator: Double) {
+        Log.i("Animated","drawCalled with $animator")
         val cx= this.cartX// - viewHolder.itemView.left;
         val cy = this.cartY //- viewHolder.itemView.top
         finalRadius = _RADIUS*mInterpolator.getInterpolation(animator.toFloat())
@@ -322,5 +312,6 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     fun onAnimateCartUpdate(animator: ValueAnimator) {
         cartAnimatedFraction = animator.animatedFraction
         Log.w("Animated","cartAnimationProgress = $cartAnimatedFraction")
+        recyclerView.invalidate()
     }
 }

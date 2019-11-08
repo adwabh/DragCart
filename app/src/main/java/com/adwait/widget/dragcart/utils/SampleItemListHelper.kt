@@ -20,6 +20,9 @@ import com.adwait.widget.dragcart.R
  * Created by Adwait Abhyankar on 1/21/2019.
  */
 class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callback(), SampleItemAnimator.UpdateListener {
+    override var animationEndAction = {}
+    override var animationCancelAction = {}
+    override var animationStartAction = {}
     var drawX: Float = 0f
     var drawY: Float = 0f
     private lateinit var image: ImageView

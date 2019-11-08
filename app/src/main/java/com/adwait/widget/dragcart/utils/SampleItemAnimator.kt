@@ -23,6 +23,9 @@ open class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): Simp
 
     interface UpdateListener {
         fun onAnimateUpdate(animator:ValueAnimator)
+        abstract var animationEndAction:()->Unit
+        abstract var animationCancelAction:()->Unit
+        abstract var animationStartAction:()->Unit
     }
 
     private val fabX: Float = 300f

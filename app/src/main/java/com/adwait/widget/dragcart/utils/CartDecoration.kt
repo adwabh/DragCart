@@ -25,7 +25,7 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
     private val dimen: IntArray = intArrayOf(0,0)
     @SuppressLint("ResourceAsColor")
     private val paint: Paint = Paint().apply {
-        color = R.color.colorAccent
+        color = recyclerView.context.getColor(R.color.colorAccent)
     }
     private var finalRadius: Float = 0f
     private val _RADIUS = 300f
@@ -72,5 +72,9 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
                 canvas.drawBitmap(it, cx - it.width/2, cy - it.height/2, paint)
             }
         }
+    }
+
+    fun reset() {
+        cartAnimationFraction = 1f
     }
 }

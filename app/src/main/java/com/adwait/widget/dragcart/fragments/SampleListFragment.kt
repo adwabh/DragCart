@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.adwait.widget.dragcart.R
 import com.adwait.widget.dragcart.adapters.SampleRecyclerAdapter
 import com.adwait.widget.dragcart.utils.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 import kotlinx.android.synthetic.main.fragment_list.*
 
@@ -54,12 +55,24 @@ class SampleListFragment: Fragment() {
 //        touchHelper = ModifiedItemListHelper(activity!!, anchor, R.color.colorAccent, R.drawable.ic_shopping_cart, recyclerView_content)
         touchHelper = HalfwayItemListHelper(recyclerView_content, anchor, callback, count)
         recyclerView_content.itemAnimator = ModifiedItemListAnimator(recyclerView_content.parent as ViewGroup, touchHelper, object:SampleItemAnimator.UpdateListener{
+            override var animationEndAction = {
+                anchor.alpha = 1f
+                cartDecoration.reset()
+            }
+            override var animationCancelAction = {
+                anchor.alpha = 1f
+                cartDecoration.reset()
+            }
+            override var animationStartAction = {}
+
             override fun onAnimateUpdate(animator: ValueAnimator) {
+                touchHelper.onAnimateCartUpdate(animator)
                 cartDecoration.onAnimateCartUpdate(animator)
+                anchor.alpha = animator.animatedFraction
             }
         })
         ItemTouchHelper(touchHelper).attachToRecyclerView(recyclerView_content)
         val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing)
-        recyclerView_content.addItemDecoration(SpacesDecoration(spacingInPixels))
+        recyclerView_content.addItemDecoration(CharacterItemDecoration(spacingInPixels))
     }
 }
