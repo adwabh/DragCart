@@ -1,33 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="adwait.widget.dragcart.MainActivity">
+    tools:context=".activities.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
-    </android.support.design.widget.AppBarLayout>
+    </FrameLayout>
 
-    <include layout="@layout/content_main" />
+    <RelativeLayout
+        android:layout_height="80dp"
+        android:layout_width="80dp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_container"
+        app:layout_constraintEnd_toEndOf="@+id/fragment_container"
+        app:layout_constraintHorizontal_bias="0.971"
+        app:layout_constraintVertical_bias="0.971"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@+id/fragment_container"
+        app:layout_constraintTop_toTopOf="@+id/fragment_container">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_shopping_cart" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:clickable="true"
+            android:focusable="true"
+            app:srcCompat="@drawable/ic_shopping_cart" />
 
-</android.support.design.widget.CoordinatorLayout>
+        <FrameLayout
+            android:id="@+id/count_layout"
+            android:visibility="gone"
+            android:layout_height="20dp"
+            android:layout_width="20dp"
+            android:layout_alignRight="@+id/floatingActionButton"
+            android:layout_alignTop="@+id/floatingActionButton"
+            android:elevation="6dp">
+
+            <ImageView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:src="@drawable/bg_circle"/>
+
+            <TextView
+                android:visibility="visible"
+                android:id="@+id/textView_cart_count"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_gravity="center"
+                android:textSize="@dimen/twelve_sp"
+                android:textColor="@color/cardview_light_background"
+                tools:text="1" />
+
+        </FrameLayout>
+    </RelativeLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>
