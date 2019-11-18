@@ -25,14 +25,17 @@ import kotlin.math.hypot
 
 /**
  * Created by Adwait Abhyankar on 9/25/2019.
- * Pitney-Bowes
- * adwait.abhyankar@pb.com
+ *
+ * avabhyankar22@mail.com
  */
 class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: View, private val callback: () -> Unit,private val containerView:ViewGroup) : ItemTouchHelper.Callback() {
 
     private var cartAnimatedFraction: Float = 0f
     private var finalRadius: Float = 0f
     private val mInterpolator = LinearInterpolator()
+    var activeCalback:((Boolean)->Unit)? = null
+    var scaleUpdater: SampleItemAnimator.UpdateListener? = null
+
     @SuppressLint("ResourceAsColor")
     private val paint: Paint = Paint().apply{
         color = recyclerView.context.getColor(R.color.colorAccent)
@@ -89,6 +92,7 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     }
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+        activeCalback?.invoke(isCurrentlyActive)
         if (isCurrentlyActive) {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         }
@@ -218,6 +222,8 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
         val scaleYHolder = PropertyValuesHolder.ofFloat("scaleY", 1.0f, ratio)
         ObjectAnimator.ofPropertyValuesHolder(oldHolder.itemView,scaleXHolder,scaleYHolder).apply {
             duration = 300
+
+            addUpdateListener { scaleUpdater?.let {  it.onAnimateUpdate(this,oldHolder.itemView) } }
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(p0: Animator?) {
 
@@ -225,14 +231,16 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
 
                 override fun onAnimationEnd(p0: Animator?) {
                     animateCartParentAlphaRestore(anchor,oldHolder)
+                    scaleUpdater?.animationEndAction?.invoke()
                 }
 
                 override fun onAnimationCancel(p0: Animator?) {
                     animateCartParentAlphaRestore(anchor,oldHolder)
+                    scaleUpdater?.animationCancelAction?.invoke()
                 }
 
                 override fun onAnimationStart(p0: Animator?) {
-
+                    scaleUpdater?.animationStartAction?.invoke()
                 }
 
             })
