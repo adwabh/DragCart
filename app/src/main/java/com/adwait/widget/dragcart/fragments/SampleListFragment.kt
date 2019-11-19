@@ -53,19 +53,29 @@ class SampleListFragment: Fragment() {
         cartDecoration = CartDecoration(ModifiedItemListHelper.drawableToBitmap(activity!!.getDrawable(R.drawable.ic_shopping_cart)),anchor,recyclerView_content)
         recyclerView_content.addItemDecoration(cartDecoration)
 //        touchHelper = ModifiedItemListHelper(activity!!, anchor, R.color.colorAccent, R.drawable.ic_shopping_cart, recyclerView_content)
-        touchHelper = HalfwayItemListHelper(recyclerView_content, anchor, callback, count)
+        touchHelper = HalfwayItemListHelper(recyclerView_content, anchor,callback,count)
+        touchHelper.activeCalback = {currentlyActive-> cartDecoration.currentlyActive = currentlyActive}
+        touchHelper.scaleUpdater = object :SampleItemAnimator.UpdateListener{
+            override fun onAnimateUpdate(animator: ValueAnimator, itemView: View) {
+                cartDecoration.onItemScaleUpdate(animator,itemView)
+            }
+
+            override var animationEndAction= {cartDecoration.endScale() }
+            override var animationCancelAction= {cartDecoration.cancelScale()}
+            override var animationStartAction = { cartDecoration.startScale()}
+        }
         recyclerView_content.itemAnimator = ModifiedItemListAnimator(recyclerView_content.parent as ViewGroup, touchHelper, object:SampleItemAnimator.UpdateListener{
             override var animationEndAction = {
-                cartDecoration.reset()
+
             }
             override var animationCancelAction = {
-                cartDecoration.reset()
+
             }
             override var animationStartAction = {}
 
-            override fun onAnimateUpdate(animator: ValueAnimator) {
+            override fun onAnimateUpdate(animator: ValueAnimator,itemView:View) {
                 touchHelper.onAnimateCartUpdate(animator)
-                cartDecoration.onAnimateCartUpdate(animator)
+                cartDecoration.onAnimateCartUpdate(animator,itemView)
             }
         })
         ItemTouchHelper(touchHelper).attachToRecyclerView(recyclerView_content)

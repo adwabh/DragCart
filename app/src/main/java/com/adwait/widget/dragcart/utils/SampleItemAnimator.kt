@@ -22,7 +22,7 @@ import com.adwait.widget.dragcart.R
 open class SampleItemAnimator(root: ViewGroup,updateTarget:UpdateListener): SimpleItemAnimator() {
 
     interface UpdateListener {
-        fun onAnimateUpdate(animator:ValueAnimator)
+        fun onAnimateUpdate(animator:ValueAnimator,itemView:View)
         abstract var animationEndAction:()->Unit
         abstract var animationCancelAction:()->Unit
         abstract var animationStartAction:()->Unit
