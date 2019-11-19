@@ -11,8 +11,7 @@ import android.view.View
 
 /**
  * Created by Adwait Abhyankar on 10/28/2019.
- * Pitney-Bowes
- * adwait.abhyankar@pb.com
+ * avabhyankar22@gmail.com
  */
 
 class SpacesDecoration(private val space: Int) : RecyclerView.ItemDecoration() {

@@ -10,8 +10,7 @@ import android.view.ViewGroup
 
 /**
  * Created by Adwait Abhyankar on 9/25/2019.
- * Pitney-Bowes
- * adwait.abhyankar@pb.com
+ * avabhyankar22@gmail.com
  */
 class ModifiedItemListAnimator(root: ViewGroup, private val itemListHelper:HalfwayItemListHelper, updateTarget: UpdateListener) : SampleItemAnimator(root, updateTarget) {
     override fun animateChange(oldHolder: RecyclerView.ViewHolder, newHolder: RecyclerView.ViewHolder?, fromX: Int, fromY: Int, toX: Int, toY: Int): Boolean {
@@ -35,7 +34,7 @@ class ModifiedItemListAnimator(root: ViewGroup, private val itemListHelper:Halfw
             valueAnimator.apply {
                 duration = 1000
                 addUpdateListener {
-                    updateTarget.onAnimateUpdate(this)
+                    updateTarget.onAnimateUpdate(this,oldHolder.itemView)
                     Log.e("Animated", "x=${this.getAnimatedValue("translationX")}, y=${this.getAnimatedValue("translationY")}")
                 }
                 addListener(object: Animator.AnimatorListener{

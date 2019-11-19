@@ -16,8 +16,7 @@ import android.view.animation.OvershootInterpolator
 
 /**
  * Created by Adwait Abhyankar on 8/28/2019.
- * Pitney-Bowes
- * adwait.abhyankar@pb.com
+ * avabhyankar22@gmail.com
  */
 class TouchSensitiveLayoutManager(context: Context, recyclerView: RecyclerView, spanCount: Int, orientation: Int, reverseLayout: Boolean) : GridLayoutManager(context,spanCount,orientation,reverseLayout), View.OnTouchListener{
 
