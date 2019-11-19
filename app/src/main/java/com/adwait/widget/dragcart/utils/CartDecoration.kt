@@ -22,9 +22,6 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
     private lateinit var newRect: Rect
     private lateinit var oldRect: Rect
 
-    init{
-        recyclerView.setLayerType(View.LAYER_TYPE_SOFTWARE, null)//Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN) })
-    }
     var currentlyActive:Boolean = false
 
     private var clearCanvas: Boolean = false
@@ -32,18 +29,11 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
     private var imageCopy: Bitmap? = null
     private var currentScaleX: Float = 0f
     private var currentScaleY: Float = 0f
-    private val destPaint: Paint = Paint().apply {
-        color = anchor.context.getColor(R.color.colorAccent)
-//        xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_OVER)
-    }
+
     private var itemView: View? = null
-    private val sourcePaint: Paint = Paint().apply {
-        color = anchor.context.getColor(R.color.colorAccent)
-        xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OVER)
-    }
     private var currentLeft: Float = 0f
     private var currentTop: Float = 0f
-    private var anchor_dimen: Double = 0.0
+    private var anchorDimen: Double = 0.0
 
     private var cartY: Float = 0.0f
     private var cartX: Float = 0.0f
@@ -56,7 +46,7 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
     private var finalRadius: Float = 0f
     private val _RADIUS = 300f
     private var baseBitmap:Lazy<Bitmap> = lazy {  Bitmap.createBitmap(300, 300, Bitmap.Config.ARGB_8888)}
-    private val scratch:Lazy<Canvas> = lazy{Canvas(baseBitmap.value)}
+    private val scratch by lazy{Canvas(baseBitmap.value)}
     private var cartAnimationFraction: Float = 0f
     private val mInterpolator: Interpolator = LinearInterpolator()
 
@@ -65,7 +55,7 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
         anchor.viewTreeObserver.addOnGlobalLayoutListener {
             recyclerView.getLocationOnScreen(recyclerDimen)
             anchor.getLocationOnScreen(dimen)
-            anchor_dimen = with(anchor){ hypot(this.width.toDouble(),this.height.toDouble())/2 }
+            anchorDimen = with(anchor){ hypot(this.width.toDouble(),this.height.toDouble())/2 }
             cartX = dimen[0].toFloat() - recyclerDimen[0] + anchor.width/2
             cartY = dimen[1].toFloat() - recyclerDimen[1] + anchor.height/2
         }
@@ -86,7 +76,6 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
         finalRadius = _RADIUS*mInterpolator.getInterpolation(1-animator.toFloat())
 
         with(canvas) {
-
             if (clearCanvas) {
                 Log.w("Animated","restore canvas")
                 clearCanvas = false
@@ -95,7 +84,7 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
                 drawCircle(
                         cx,
                         cy,
-                        kotlin.math.max(anchor_dimen.toFloat(),finalRadius),
+                        kotlin.math.max(anchorDimen.toFloat(),finalRadius),
                         paint)
                 imageCopy?.let {
                     if (!::oldRect.isInitialized) {
@@ -116,11 +105,6 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
                         }
                     }
                 }
-//                drawCircle(
-//                        cx,
-//                        cy,
-//                        kotlin.math.max(anchor_dimen.toFloat(),finalRadius),
-//                        sourcePaint)
 
                 bitmap.let {
                     canvas.drawBitmap(it, cx - it.width/2, cy - it.height/2, paint)
@@ -179,10 +163,6 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
 
     fun cancelScale() {
         endScale()
-    }
-
-    inline fun <R> Bitmap?.onValid(call:(Bitmap)->R){
-        this?.let{call.invoke(this)}
     }
 
 }
