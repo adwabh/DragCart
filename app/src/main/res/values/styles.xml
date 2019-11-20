@@ -8,13 +8,22 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="ToolbarAction" parent="Base.TextAppearance.AppCompat.Caption">
+        <item name="android:textColor">@color/text_color_light</item>
+        <item name="android:textSize">@dimen/font_medium</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="DetailsBold.Large" parent="Base.TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/font_normal</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="DetailsTitle" parent="Base.TextAppearance.AppCompat.Title">
+        <item name="android:textSize">@dimen/font_normal</item>
+    </style>
+
+    <style name="DetailsBold" parent="Base.TextAppearance.AppCompat.Body1">
+        <item name="android:textStyle">bold</item>
+    </style>
 
 </resources>
