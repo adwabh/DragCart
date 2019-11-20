@@ -1,12 +1,9 @@
 package com.adwait.widget.dragcart.utils
 
-import android.graphics.Bitmap
+import android.graphics.*
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import android.graphics.Bitmap.CompressFormat
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
 import java.io.ByteArrayOutputStream
 
 
@@ -43,4 +40,5 @@ object ImageUtils {
         canvas.drawBitmap(bitmap, 0f, 0f, null)
         return outputBitmap
     }
+
 }

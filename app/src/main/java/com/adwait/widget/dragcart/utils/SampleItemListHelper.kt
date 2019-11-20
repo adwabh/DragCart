@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
+import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.view.animation.*
@@ -20,18 +21,21 @@ import com.adwait.widget.dragcart.R
  * Created by Adwait Abhyankar on 1/21/2019.
  */
 class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callback(), SampleItemAnimator.UpdateListener {
-    var drawX: Float = 0f
-    var drawY: Float = 0f
-    private lateinit var image: ImageView
-
-
-    override fun onAnimateUpdate(animator: ValueAnimator) {
+    override fun onAnimateUpdate(animator: ValueAnimator, itemView: View) {
         drawX = (animator.getAnimatedValue("x") as Float)
         drawY = (animator.getAnimatedValue("y") as Float)
         Log.d("Animated", "updated x=$drawX, y=$drawY")
 //        image.translationX = drawX
 //        image.translationY = drawY
     }
+
+    override var animationEndAction = {}
+    override var animationCancelAction = {}
+    override var animationStartAction = {}
+    var drawX: Float = 0f
+    var drawY: Float = 0f
+    private lateinit var image: ImageView
+
 
     var lastX:Float = 0f
     var lastY:Float = 0f

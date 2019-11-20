@@ -20,8 +20,7 @@ import android.view.ViewTreeObserver
 
 /**
  * Created by Adwait Abhyankar on 9/16/2019.
- * Pitney-Bowes
- * adwait.abhyankar@pb.com
+ * avabhyankar22@gmail.com
  */
 class ModifiedItemListHelper(private val context: Context, private val anchor: View, private val color: Int = R.color.colorAccent, cartDrawable: Int, recyclerView: RecyclerView) : ItemTouchHelper.Callback() {
 
