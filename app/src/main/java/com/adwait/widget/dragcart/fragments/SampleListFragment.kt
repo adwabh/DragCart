@@ -35,7 +35,7 @@ class SampleListFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(com.adwait.widget.dragcart.R.layout.fragment_list,container,false)
+        return inflater.inflate(R.layout.fragment_list,container,false)
     }
 
 
