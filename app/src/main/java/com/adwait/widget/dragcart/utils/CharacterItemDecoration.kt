@@ -17,39 +17,7 @@ class CharacterItemDecoration(private val offset: Int) : RecyclerView.ItemDecora
 
         val layoutParams = view.layoutParams as GridLayoutManager.LayoutParams
 
-//        if (layoutParams.spanIndex % 2 == 0) {
-//
-//            outRect.top = offset
-//            outRect.left = offset
-//            outRect.right = offset / 2
-//
-//        } else {
-//
-//            outRect.top = offset
-//            outRect.right = offset
-//            outRect.left = offset / 2
-//
-//        }
-
-        with(outRect) {
-            when(layoutParams.spanIndex){
-                0-> {
-                    top = offset
-                    left = offset
-                    right = offset / 2
-                }
-                layoutParams.spanSize-1->{
-                    top = offset
-                    left = offset / 2
-                    right = offset
-                }
-                else->{
-                    top = offset
-                    left = offset / 2
-                    right = offset / 2
-                }
-            }
-        }
+        with(outRect) { set(offset,offset,offset,offset) }
     }
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
