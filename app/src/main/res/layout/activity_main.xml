@@ -41,8 +41,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:clickable="true"
-            android:focusable="true"
             app:srcCompat="@drawable/ic_shopping_cart" />
 
         <FrameLayout
@@ -52,7 +50,10 @@
             android:layout_width="20dp"
             android:layout_alignRight="@+id/floatingActionButton"
             android:layout_alignTop="@+id/floatingActionButton"
-            android:elevation="6dp">
+            android:elevation="6dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
 
             <ImageView
                 android:layout_height="match_parent"

@@ -8,10 +8,10 @@ import android.util.Log
 import android.view.View
 
 /**
- * Created by arif on 22/12/17.
+ * Created by adwait on 12/11/18.
  */
 
-class CharacterItemDecoration(private val offset: Int) : RecyclerView.ItemDecoration() {
+class SpaceDecoration(private val offset: Int) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
 

@@ -14,11 +14,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.DecelerateInterpolator
+import android.view.*
 import android.view.animation.LinearInterpolator
 import com.adwait.widget.dragcart.R
 import kotlin.math.hypot
@@ -38,6 +34,7 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     private val mInterpolator = LinearInterpolator()
     var activeCalback:((Boolean)->Unit)? = null
     var scaleUpdater: SampleItemAnimator.UpdateListener? = null
+    private val tracker:VelocityTracker by lazy { VelocityTracker.obtain() }
 
     @SuppressLint("ResourceAsColor")
     private val paint: Paint = Paint().apply{
@@ -46,7 +43,7 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     private val bitmapPaint: Paint = Paint().apply{
         color = recyclerView.context.getColor(android.R.color.white)
     }
-    private val bitmap = ModifiedItemListHelper.drawableToBitmap(recyclerView.context.getDrawable(R.drawable.ic_shopping_cart))
+    private val bitmap = ImageUtils.drawableToBitmap(recyclerView.context.getDrawable(R.drawable.ic_shopping_cart))
 
     private val _RADIUS: Float = 300f
     private var toCart: Boolean = false

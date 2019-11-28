@@ -1,9 +1,5 @@
 <resources>
     <string name="app_name">interaction</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="sample_date">01.01.2019</string>
     <string name="amount_text">Amount</string>
     <string name="date_text">Date</string>
     <string name="status_text">Status</string>

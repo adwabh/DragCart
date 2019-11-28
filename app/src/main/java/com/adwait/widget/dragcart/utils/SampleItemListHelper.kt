@@ -118,7 +118,7 @@ class SampleItemListHelper(private val root: ViewGroup?) : ItemTouchHelper.Callb
         paint.color = Color.WHITE
         val radius = Math.min(viewHolder.itemView.width,viewHolder.itemView.height)//Math.hypot((viewHolder.itemView.left - dX).toDouble(), (viewHolder.itemView.top - dY).toDouble())
 
-        val clipped = ImageUtils.GetBitmapClippedCircle(copy, radius.toInt())
+        val clipped = ImageUtils.getBitmapClippedCircle(copy, radius.toInt())
         val xPos = viewHolder.itemView.left + dX
         val yPos = viewHolder.itemView.top + dY
         val height = clipped.height

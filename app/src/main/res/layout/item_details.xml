@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?attr/selectableItemBackground"
@@ -22,7 +21,6 @@
         tools:text="Twitter" />
 
     <TextView
-        android:id="@+id/tv_details_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/eight_dp"
@@ -34,7 +32,6 @@
         tools:text="$11,550.00 X1 (including VAT 10%)" />
 
     <TextView
-        android:id="@+id/tv_details_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/DetailsBold"
@@ -45,7 +42,6 @@
 
     <ImageView
         android:contentDescription="@string/status_text"
-        android:id="@+id/img_details"
         android:layout_width="@dimen/twenty_four_dp"
         android:layout_height="@dimen/twenty_four_dp"
         android:layout_marginEnd="@dimen/sixteen_dp"
