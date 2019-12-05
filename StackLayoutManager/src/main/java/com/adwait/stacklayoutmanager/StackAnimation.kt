@@ -1,7 +1,7 @@
-package com.littlemango.stacklayoutmanager
+package com.adwait.stacklayoutmanager
 
 import android.view.View
-import com.littlemango.stacklayoutmanager.StackLayoutManager.ScrollOrientation
+import com.adwait.stacklayoutmanager.StackLayoutManager.ScrollOrientation
 
 abstract class StackAnimation(scrollOrientation: ScrollOrientation, visibleCount: Int) {
 

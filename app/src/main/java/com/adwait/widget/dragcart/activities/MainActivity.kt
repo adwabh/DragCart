@@ -2,7 +2,7 @@ package com.adwait.widget.dragcart.activities
 
 import android.opengl.Visibility
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
 import com.adwait.widget.dragcart.R
@@ -23,14 +23,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpFragment(anchor: View, textView_cart_count: TextView) {
-        var transaction = supportFragmentManager?.beginTransaction()
+        var transaction = supportFragmentManager.beginTransaction()
         with(transaction){
             var fragment = SampleListFragment.newInstance().apply {
                 callback = { this@MainActivity.count += 1; textView_cart_count.text = this@MainActivity.count.toString()} }
             fragment.count = count_layout
             fragment.anchor = anchor
-            this?.replace(R.id.fragment_container,fragment)
-        this?.commit()
+            this.replace(R.id.fragment_container,fragment)
+            this.commit()
         }
 
     }

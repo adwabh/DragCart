@@ -3,8 +3,8 @@ package com.adwait.widget.dragcart.utils
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Build
-import android.support.v7.widget.CardView
-import android.support.v7.widget.Toolbar
+import androidx.cardview.widget.CardView
+import androidx.appcompat.widget.Toolbar
 import android.view.View
 import android.widget.ImageView
 import com.adwait.widget.dragcart.R

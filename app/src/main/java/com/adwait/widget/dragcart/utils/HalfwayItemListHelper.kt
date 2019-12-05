@@ -9,18 +9,14 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.os.Build
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
-import android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_DRAG
-import android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import com.adwait.widget.dragcart.R
 import kotlin.math.hypot
@@ -48,7 +44,7 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     private val bitmapPaint: Paint = Paint().apply{
         color = recyclerView.context.getColor(android.R.color.white)
     }
-    private val bitmap = ModifiedItemListHelper.drawableToBitmap(recyclerView.context.getDrawable(R.drawable.ic_shopping_cart))
+    private val bitmap = ModifiedItemListHelper.drawableToBitmap(recyclerView.context?.getDrawable(R.drawable.ic_shopping_cart)!!)
 
     private val _RADIUS: Float = 300f
     private var toCart: Boolean = false
@@ -74,15 +70,9 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     }
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-        return if (recyclerView.layoutManager is GridLayoutManager) {
-            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-            val swipeFlags = 0
-            makeMovementFlags(dragFlags, swipeFlags)
-        } else {
-            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-            val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-            makeMovementFlags(dragFlags, swipeFlags)
-        }
+        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        val swipeFlags = 0
+        return  makeMovementFlags(dragFlags, swipeFlags)
     }
 
     override fun onMove(recyclerView: RecyclerView, source: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -98,9 +88,6 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         activeCalback?.invoke(isCurrentlyActive)
-//        if (isCurrentlyActive) {
-//            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-//        }
     }
 
     override fun onChildDrawOver(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder?, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
@@ -117,7 +104,7 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
                 }
                 finalX = dX
                 finalY = dY
-                drawCart(c,viewHolder,recyclerView,getCartThreshold(dX.toDouble(),dY.toDouble(),viewHolder))
+                drawCart(c, getCartThreshold(dX.toDouble(),dY.toDouble(),viewHolder))
                 viewCopy.onValid {bitmap-> c.drawBitmap(bitmap,dX + it.itemView.left,dY + it.itemView.top ,paint) }
                 bitmap.let { bitmap->c.drawBitmap(bitmap, cartX - bitmap.width/2, cartY - bitmap.height/2, bitmapPaint) }
                 it.itemView.translationX = dX
@@ -133,7 +120,7 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
                         true
                     }
                 }
-                drawCart(c,viewHolder,recyclerView,1.0)
+                drawCart(c, 1.0)
                 viewCopy.onValid {bitmap-> c.drawBitmap(bitmap,finalX + it.itemView.left,finalY + it.itemView.top ,paint) }
                 bitmap.let { bitmap->c.drawBitmap(bitmap, cartX - bitmap.width/2, cartY - bitmap.height/2, bitmapPaint) }
             }
@@ -304,11 +291,11 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
     private fun CartViewHolder.animateRestore(){
         this.itemView.apply {
             if (Build.VERSION.SDK_INT >= 21) {
-                val tag = getTag(android.support.v7.recyclerview.R.id.item_touch_helper_previous_elevation)
+                val tag = getTag(R.id.item_touch_helper_previous_elevation)
                 if (tag != null && tag is Float) {
                     ViewCompat.setElevation(this, tag)
                 }
-                setTag(android.support.v7.recyclerview.R.id.item_touch_helper_previous_elevation, null as Any?)
+                setTag(R.id.item_touch_helper_previous_elevation, null as Any?)
             }
             alpha = 0.0f
             scaleX = 1.0f
@@ -318,7 +305,7 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
         }
     }
 
-    private fun drawCart(canvas: Canvas, viewHolder: RecyclerView.ViewHolder, recyclerView: RecyclerView, animator: ValueAnimator) {
+    /*private fun drawCart(canvas: Canvas, viewHolder: RecyclerView.ViewHolder, recyclerView: RecyclerView, animator: ValueAnimator) {
         val cx= this.cartX// - viewHolder.itemView.left;
         val cy = this.cartY //- viewHolder.itemView.top
         canvas.drawCircle(
@@ -332,9 +319,9 @@ class HalfwayItemListHelper(private val recyclerView: RecyclerView, var anchor: 
                 canvas.drawBitmap(it, cx - it.width/2, cy - it.height/2, paint)
             }
         }
-    }
+    }*/
 
-    private fun drawCart(canvas: Canvas, viewHolder: RecyclerView.ViewHolder, recyclerView: RecyclerView, animator: Double) {
+    private fun drawCart(canvas: Canvas, animator: Double) {
         Log.i("Animated","drawCalled with $animator")
         val cx= this.cartX// - viewHolder.itemView.left;
         val cy = this.cartY //- viewHolder.itemView.top

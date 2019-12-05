@@ -8,10 +8,10 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.View
 import com.adwait.widget.dragcart.R
 import android.graphics.Bitmap
@@ -26,7 +26,7 @@ class ModifiedItemListHelper(private val context: Context, private val anchor: V
 
 
     private lateinit var mCartAnim: ValueAnimator
-    private var mCartHolder:RecyclerView.ViewHolder? = null
+    private var mCartHolder: RecyclerView.ViewHolder? = null
     private var cartX: Float = 0f
     private var cartY: Float = 0f
     private val paint: Paint = Paint()
@@ -49,7 +49,7 @@ class ModifiedItemListHelper(private val context: Context, private val anchor: V
 
     init{
         anchor.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
-        paint.color = context.resources.getColor(color)
+        paint.color = context.resources.getColor(color,null)
         translateLocation = floatArrayOf(0f, 0f)
     }
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
@@ -75,9 +75,9 @@ class ModifiedItemListHelper(private val context: Context, private val anchor: V
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         if (Build.VERSION.SDK_INT >= 21 && isCurrentlyActive) {
-            val originalElevation = viewHolder.itemView.getTag(R.id.item_touch_helper_previous_elevation)
+            var originalElevation = viewHolder.itemView.getTag(R.id.item_touch_helper_previous_elevation)
             if (originalElevation == null) {
-                val originalElevation = ViewCompat.getElevation(viewHolder.itemView)
+                originalElevation = ViewCompat.getElevation(viewHolder.itemView)
                 val newElevation = 1.0f + findMaxElevation(recyclerView, viewHolder.itemView)
                 ViewCompat.setElevation(viewHolder.itemView, newElevation)
                 viewHolder.itemView.setTag(R.id.item_touch_helper_previous_elevation, originalElevation)

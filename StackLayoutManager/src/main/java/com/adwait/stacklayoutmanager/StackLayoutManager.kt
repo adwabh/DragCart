@@ -1,19 +1,23 @@
-package com.littlemango.stacklayoutmanager
+package com.adwait.stacklayoutmanager
 
-import android.support.annotation.IntRange
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING
-import android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE
+import androidx.annotation.IntRange
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import android.view.View
 import android.view.ViewGroup
+import kotlin.math.max
+import kotlin.math.min
 
-class StackLayoutManager(scrollOrientation: ScrollOrientation,
+public class StackLayoutManager(scrollOrientation: ScrollOrientation,
                           visibleCount: Int,
                           animation: Class<out StackAnimation>,
                           layout: Class<out StackLayout>) : RecyclerView.LayoutManager() {
     private enum class FlingOrientation{NONE, LEFT_TO_RIGHT, RIGHT_TO_LEFT, TOP_TO_BOTTOM, BOTTOM_TO_TOP}
 
     enum class ScrollOrientation{LEFT_TO_RIGHT, RIGHT_TO_LEFT, TOP_TO_BOTTOM, BOTTOM_TO_TOP}
+
+    var itemUnderDrag: Boolean = false
 
     private var mVisibleItemCount = visibleCount
 
@@ -211,6 +215,7 @@ class StackLayoutManager(scrollOrientation: ScrollOrientation,
         super.onAttachedToWindow(view)
         mOnFlingListener = object : RecyclerView.OnFlingListener() {
             override fun onFling(velocityX: Int, velocityY: Int): Boolean {
+                if(itemUnderDrag){ return false }
                 if (mPagerMode) {
                     when(mScrollOrientation) {
                         ScrollOrientation.RIGHT_TO_LEFT, ScrollOrientation.LEFT_TO_RIGHT -> {
@@ -243,6 +248,7 @@ class StackLayoutManager(scrollOrientation: ScrollOrientation,
 
         mOnScrollListener = object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if(itemUnderDrag){ return }
                 if (newState == SCROLL_STATE_IDLE) {
                     if (!mFixScrolling) {
                         mFixScrolling = true
@@ -289,22 +295,24 @@ class StackLayoutManager(scrollOrientation: ScrollOrientation,
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
 
-        mLayout?.requestLayout()
+        if (!itemUnderDrag) {
+            mLayout?.requestLayout()
 
-        removeAndRecycleAllViews(recycler)
+            removeAndRecycleAllViews(recycler)
 
-        if (itemCount > 0) {
-            mScrollOffset = getValidOffset(mScrollOffset)
-            loadItemView(recycler)
+            if (itemCount > 0) {
+                mScrollOffset = getValidOffset(mScrollOffset)
+                loadItemView(recycler)
+            }
         }
     }
 
     override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
-        return handleScrollBy(dx, recycler)
+        return if (itemUnderDrag) { super.scrollHorizontallyBy(dx, recycler, state) } else { handleScrollBy(dx, recycler) }
     }
 
     override fun scrollVerticallyBy(dy: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State?): Int {
-        return handleScrollBy(dy, recycler)
+        return if (itemUnderDrag) { super.scrollVerticallyBy(dy, recycler, state) } else { handleScrollBy(dy, recycler) }
     }
 
     override fun scrollToPosition(position: Int) {
@@ -427,8 +435,8 @@ class StackLayoutManager(scrollOrientation: ScrollOrientation,
 
     private fun getValidOffset(expectOffset: Int): Int {
         return when(mScrollOrientation) {
-            ScrollOrientation.RIGHT_TO_LEFT, ScrollOrientation.LEFT_TO_RIGHT -> Math.max(Math.min(width * (itemCount - 1), expectOffset), 0)
-            else -> Math.max(Math.min(height * (itemCount - 1), expectOffset), 0)
+            ScrollOrientation.RIGHT_TO_LEFT, ScrollOrientation.LEFT_TO_RIGHT -> max(min(width * (itemCount - 1), expectOffset), 0)
+            else -> max(min(height * (itemCount - 1), expectOffset), 0)
         }
     }
 

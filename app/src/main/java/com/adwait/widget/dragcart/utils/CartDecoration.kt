@@ -2,7 +2,7 @@ package com.adwait.widget.dragcart.utils
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.animation.Interpolator
@@ -66,11 +66,13 @@ class CartDecoration(private val bitmap: Bitmap, private val anchor: View, priva
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDrawOver(c, parent, state)
-        if (itemView!=null && !currentlyActive) { drawCart(c, recyclerView, cartAnimationFraction.toDouble(), itemView!!) }
-        Log.i("Animated","drawCalled with $cartAnimationFraction")
+        if (itemView!=null && !currentlyActive) {
+            drawCart(c, cartAnimationFraction.toDouble(), itemView!!)
+            Log.i("Animated","drawCalled with $cartAnimationFraction")
+        }
     }
 
-    private fun drawCart(canvas: Canvas, recyclerView: RecyclerView, animator: Double, itemView: View) {
+    private fun drawCart(canvas: Canvas, animator: Double, itemView: View) {
         val cx= this.cartX// - viewHolder.itemView.left;
         val cy = this.cartY //- viewHolder.itemView.top
         finalRadius = _RADIUS*mInterpolator.getInterpolation(1-animator.toFloat())

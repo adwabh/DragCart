@@ -4,9 +4,9 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
@@ -43,7 +43,7 @@ class TouchSensitiveLayoutManager(context: Context, recyclerView: RecyclerView, 
     private var mInitialX: Float = 0f
     private lateinit var mVelocityTracker: VelocityTracker
 
-     var recyclerView:RecyclerView
+     var recyclerView: RecyclerView
 
     init{
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager

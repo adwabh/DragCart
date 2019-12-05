@@ -1,4 +1,4 @@
-package com.littlemango.stacklayoutmanager
+package com.adwait.stacklayoutmanager
 
 import android.view.View
 

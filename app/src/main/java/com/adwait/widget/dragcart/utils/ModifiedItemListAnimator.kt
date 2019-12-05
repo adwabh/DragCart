@@ -3,7 +3,7 @@ package com.adwait.widget.dragcart.utils
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.ViewGroup
 
@@ -25,7 +25,7 @@ class ModifiedItemListAnimator(root: ViewGroup, private val itemListHelper:Halfw
         return true
     }
 
-    private fun animateToCartImpl(changeInfo: MoveToCartInfo, oldHolder: CartViewHolder, newHolder: RecyclerView.ViewHolder?,itemListHelper: HalfwayItemListHelper): Boolean {
+    private fun animateToCartImpl(changeInfo: MoveToCartInfo, oldHolder: CartViewHolder, newHolder: RecyclerView.ViewHolder?, itemListHelper: HalfwayItemListHelper): Boolean {
             Log.d("Animated", "old=$oldHolder, new=$newHolder")
 
             val xHolder = PropertyValuesHolder.ofFloat("translationX",changeInfo.lastX,changeInfo.cartX)

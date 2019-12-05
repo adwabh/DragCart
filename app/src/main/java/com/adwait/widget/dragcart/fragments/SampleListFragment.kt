@@ -1,28 +1,23 @@
 package com.adwait.widget.dragcart.fragments
 
 import android.animation.ValueAnimator
-import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.adwait.stacklayoutmanager.StackLayoutManager
 import com.adwait.widget.dragcart.R
 import com.adwait.widget.dragcart.adapters.SampleRecyclerAdapter
 import com.adwait.widget.dragcart.utils.*
 import kotlinx.android.synthetic.main.fragment_list.*
 
-
-
-
-
-
-
 /**
  * Created by Adwait Abhyankar on 1/6/2019.
  */
 class SampleListFragment: Fragment() {
+    private lateinit var mStackLayoutManager: StackLayoutManager
     private lateinit var cartDecoration: CartDecoration
     lateinit var callback: () -> Unit
     lateinit var count: ViewGroup
@@ -51,29 +46,26 @@ class SampleListFragment: Fragment() {
         super.onActivityCreated(savedInstanceState)
 //        val layoutManager = StackLayoutManager(activity as Context,recyclerView_content)//LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
 //        recyclerView_content.layoutManager = layoutManager
-        recyclerView_content.layoutManager = com.littlemango.stacklayoutmanager.StackLayoutManager()
+        mStackLayoutManager = com.adwait.stacklayoutmanager.StackLayoutManager()
+        recyclerView_content.layoutManager = mStackLayoutManager
         recyclerView_content.adapter = SampleRecyclerAdapter()
-        cartDecoration = CartDecoration(ModifiedItemListHelper.drawableToBitmap(activity!!.getDrawable(R.drawable.ic_shopping_cart)),anchor,recyclerView_content)
+        cartDecoration = CartDecoration(ModifiedItemListHelper.drawableToBitmap(activity?.getDrawable(R.drawable.ic_shopping_cart)!!),anchor,recyclerView_content)
         recyclerView_content.addItemDecoration(cartDecoration)
 //        touchHelper = ModifiedItemListHelper(activity!!, anchor, R.color.colorAccent, R.drawable.ic_shopping_cart, recyclerView_content)
         touchHelper = HalfwayItemListHelper(recyclerView_content, anchor,callback,count)
-        touchHelper.activeCalback = {currentlyActive-> cartDecoration.currentlyActive = currentlyActive}
+        touchHelper.activeCalback = {currentlyActive-> cartDecoration.currentlyActive = currentlyActive;mStackLayoutManager.itemUnderDrag = true}
         touchHelper.scaleUpdater = object :SampleItemAnimator.UpdateListener{
             override fun onAnimateUpdate(animator: ValueAnimator, itemView: View) {
                 cartDecoration.onItemScaleUpdate(animator,itemView)
             }
 
-            override var animationEndAction= {cartDecoration.endScale() }
-            override var animationCancelAction= {cartDecoration.cancelScale()}
+            override var animationEndAction= {cartDecoration.endScale(); mStackLayoutManager.itemUnderDrag = false}
+            override var animationCancelAction= {cartDecoration.cancelScale(); mStackLayoutManager.itemUnderDrag = false}
             override var animationStartAction = { cartDecoration.startScale()}
         }
         recyclerView_content.itemAnimator = ModifiedItemListAnimator(recyclerView_content.parent as ViewGroup, touchHelper, object:SampleItemAnimator.UpdateListener{
-            override var animationEndAction = {
-
-            }
-            override var animationCancelAction = {
-
-            }
+            override var animationEndAction = {}
+            override var animationCancelAction = {}
             override var animationStartAction = {}
 
             override fun onAnimateUpdate(animator: ValueAnimator,itemView:View) {
@@ -82,7 +74,7 @@ class SampleListFragment: Fragment() {
             }
         })
         ItemTouchHelper(touchHelper).attachToRecyclerView(recyclerView_content)
-        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing)
-        recyclerView_content.addItemDecoration(CharacterItemDecoration(spacingInPixels))
+//        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing)
+//        recyclerView_content.addItemDecoration(CharacterItemDecoration(spacingInPixels))
     }
 }

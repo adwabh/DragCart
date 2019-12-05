@@ -1,6 +1,6 @@
 package com.adwait.widget.dragcart.adapters
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +41,7 @@ class SampleRecyclerAdapter : RecyclerView.Adapter<SampleRecyclerAdapter.SampleV
     }
 
     companion object {
-        private const val STATIC_NUMBER: Int = Int.MAX_VALUE
+        private const val STATIC_NUMBER: Int = 1000
         private val names = arrayOf("Dribble","Pintrest","Behance","YouTube","Twitter","Facebook","LinkedIn","WhatsApp","Instagram","Medium")
         private val imageIdS = arrayOf(R.drawable.p1,R.drawable.p2,R.drawable.p3,R.drawable.p4,R.drawable.p5,R.drawable.p6,R.drawable.p7,R.drawable.p8,R.drawable.p9,R.drawable.p10)
 
